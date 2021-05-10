@@ -1,4 +1,4 @@
-# marketSite
+# market-site-server
 
 # 목적
 * 신상 상품 및 중고 상품 거래 서비스 기능들을 구현함으로써 Backend System의 도메인 이해
