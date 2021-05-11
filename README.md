@@ -7,4 +7,4 @@
 
 # 기획
 * dd
-* 프로토타입 링크 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK){:target="_blank"}
+* 프로토타입 링크 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK{:target="_blank"})
