@@ -6,5 +6,5 @@
 * ex) 당근마켓의 중고거래 사이트 + 아이디어스 상품 거래 사이트 구현
 
 # 기획
-* ㅇㅇ
-* 프로토타입 링크 : https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK
+* dd
+* 프로토타입 링크 : [ProtoType](https://gist.github.com/ihoneymon/652be052a0727ad59601){:target="_blank"}
