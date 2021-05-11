@@ -10,3 +10,5 @@
   중개 플랫폼을 활용함으로써 원하는 물품을 거래할 수 있게 구현
 * 구매자 / 판매자의 구분 없이 자유롭게 물품을 등록 및 구매 가능하게 구현
 * 프로토타입 링크 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK)
+
+# 프로젝트 주요 기능
