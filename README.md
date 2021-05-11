@@ -6,5 +6,7 @@
 * ex) 당근마켓의 중고거래 사이트 + 아이디어스 상품 거래 사이트 구현
 
 # 기획
-* dd
-* 프로토타입 링크 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK{:target="_blank"})
+* 판매 및 중고 상품 거래 사이트 이용자에게 각종 물품들의 관련 정볼르 업로드 하고
+  중개 플랫폼을 활용함으로써 원하는 물품을 거래할 수 있게 구현
+* 구매자 / 판매자의 구분 없이 자유롭게 물품을 등록 및 구매 가능하게 구현
+* 프로토타입 링크 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK)
