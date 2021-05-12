@@ -13,3 +13,4 @@
 
 # 프로젝트 DB ERD
 
+![marketSite_ERD](https://user-images.githubusercontent.com/80434153/117936307-ae173480-b33f-11eb-97a8-be5c387d5b4b.png)
