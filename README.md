@@ -11,6 +11,9 @@
 * 구매자 / 판매자의 구분 없이 자유롭게 물품을 등록 및 구매 가능하게 구현
 * 화면설계 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK)
 
+# 사용 기술 및 환경
+* Spring Boot, Maven, Mybatis, Mysql, Redis, Java8, Jenkins, Naver Cloud Platform
+
 # 프로젝트 DB ERD
 
 ![marketSite_ERD](https://user-images.githubusercontent.com/80434153/117936307-ae173480-b33f-11eb-97a8-be5c387d5b4b.png)
