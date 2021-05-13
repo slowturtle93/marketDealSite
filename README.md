@@ -12,7 +12,7 @@
 * 화면설계 : [ProtoType](https://ovenapp.io/view/dfupMDaIEzl6UIfPpVNzzi9Ub6eAdjST/J34oK)
 
 # 사용 기술 및 환경
-* Spring Boot, Maven, Mybatis, Mysql, Redis, Java8, Jenkins, Naver Cloud Platform
+* Spring Boot, Maven, Mybatis, Mysql, Redis, Java8, Jenkins, google Cloud Platform
 
 # 프로젝트 DB ERD
 
