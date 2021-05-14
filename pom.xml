@@ -15,7 +15,8 @@
 	<name>martketServer</name>
 	<description>Market Site project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
+		<start-class>com.market.server.ServerApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,6 +29,19 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		
+		<!-- Session -->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
