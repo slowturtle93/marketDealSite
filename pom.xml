@@ -8,11 +8,12 @@
 		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>martketServer</artifactId>
+	<groupId>com.market</groupId>
+	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>martketServer</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Market Site project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
