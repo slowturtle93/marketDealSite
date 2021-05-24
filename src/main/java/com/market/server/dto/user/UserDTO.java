@@ -8,9 +8,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserDTO {
+	public enum Status {
+		DEFAULT, DELETED
+    }
 	
-	private String loginNum;     // 사용자번호
+	private int loginNo;         // 사용자번호
 	private String loginId;      // 로그인아이디
+	private String userNm;       // 사용자명
 	private String loginPw;      // 로그인비밀번호
 	private String hpNum;        // 전화번호
 	private String email;        // 이메일
@@ -23,11 +27,13 @@ public class UserDTO {
 	private int    point;        // 포인트
 	private String regDttm;      // 등록일시
 	private String updDttm;      // 수정일시
+	private Status status;       // 상태
 	
-	public UserDTO(String loginId, String loginPw, String hpNum, String email, String roadFullAddr, String jibunAddr, 
-			       String zipNo, String addrDetail, String regDttm, String updDttm) {
+	public UserDTO(String loginId, String loginPw, String userNm, String hpNum, String email, String roadFullAddr,
+			       String jibunAddr, String zipNo, String addrDetail, String regDttm, String updDttm, Status status) {
 		this.loginId      = loginId;
 		this.loginPw      = loginPw;
+		this.userNm       = userNm;
 		this.hpNum        = hpNum;
 		this.email        = email;
 		this.roadFullAddr = roadFullAddr;
@@ -36,6 +42,7 @@ public class UserDTO {
 		this.addrDetail   = addrDetail;
 		this.regDttm      = regDttm;
 		this.updDttm      = updDttm;
+		this.status       = status;
 	}
 	
 	/*
@@ -49,6 +56,6 @@ public class UserDTO {
 	public static boolean hasNullDataBeforeSignup(UserDTO userDTO) {
 		return userDTO.getLoginId() == null || userDTO.getLoginPw()      == null || userDTO.getHpNum()     == null ||
 			   userDTO.getEmail()   == null || userDTO.getRoadFullAddr() == null || userDTO.getJibunAddr() == null ||
-			   userDTO.getZipNo()   == null || userDTO.getAddrDetail()   == null;
+			   userDTO.getZipNo()   == null || userDTO.getAddrDetail()   == null || userDTO.getUserNm()    == null;
 	}
 }
