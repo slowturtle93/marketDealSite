@@ -92,15 +92,15 @@
         	, #{nickName}
         	, #{point}
         	, 'DEFAULT'
-        	, TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
-        	, TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+        	, DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
+        	, DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
         )
     </insert>
     
  	<update id="updatePassword" parameterType="com.market.server.dto.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET login_pw = #{loginPw}
- 		     , upd_dttm = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %h:%i')
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  	</update>
@@ -115,7 +115,7 @@
  		     , zip_no         = #{zipNo}
  		     , addr_detail    = #{addrDetail}
  		     , nick_name      = #{nickName}
- 		     , upd_dttm       = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+ 		     , upd_dttm       = DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  	</update>
@@ -123,7 +123,7 @@
  	<update id="delete" parameterType="com.market.server.dto.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET status   = 'DELETE'
- 		     , upd_dttm = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') 
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s') 
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  	</update>
