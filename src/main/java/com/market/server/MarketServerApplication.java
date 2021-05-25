@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-/*
+/**
  * @SpringBootApplication
  * 
  * SpringBoot의 자동 설정, 스프링 Bean 읽기와 생성을 모두 자동으로 설정됩니다.

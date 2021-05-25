@@ -21,19 +21,19 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 public class RedisConfig {
-	@Value("${market.server.redis.host}")
+	@Value("${spring.redis.host}")
     private String redisHost;
 
-    @Value("${market.server.redis.port}")
+    @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${market.server.redis.password}")
+    @Value("${spring.redis.password}")
     private String redisPwd;
 
-    @Value("${expire.defaultTime}")
+    @Value("${expire.default}")
     private long defaultExpireSecond;
 
-    /*
+    /**
      * Class <=> Json간 변환을 담당한다.
      *
      * json => object 변환시 readValue(File file, T.class) => json File을 읽어 T 클래스로 변환 readValue(Url url,
@@ -54,7 +54,7 @@ public class RedisConfig {
         return mapper;
     }
 
-    /*
+    /**
      * Redis Connection Factory library별 특징
      * 1. Jedis - 멀티쓰레드환경에서 쓰레드 안전을 보장하지 않는다.
      *          - Connection pool을 사용하여 성능, 안정성 개선이 가능하지만 Lettuce보다 상대적으로 하드웨어적인 자원이 많이 필요하다.

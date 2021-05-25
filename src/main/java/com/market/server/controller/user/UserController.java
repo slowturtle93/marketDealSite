@@ -1,6 +1,5 @@
 package com.market.server.controller.user;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +27,29 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 
+/**
+ * Java Logging
+ * <p>
+ * Log4j 속도와 유연성을 고려하여 디자인되어있어 속도에 최적화 되어있다. 멀티 스레드 환경에서 안전하다.
+ * </p>
+ * <p>
+ * SLF4J 로깅에 대한 추상 레이어를 제공한다. 로깅의 인터페이스 역할을 한다. 공통 인터페이스 역할을 하기 때문에 구현체의 종류와 상관 없이 일관된 로깅코드를 작성할 수
+ * 있다. slf4j만으로는 로깅을 실행할 수 없어서 commons logging, log4j, logback 등의 로깅 구현체를 적용해야 한다.
+ * </p>
+ * Logback Log4j를 토대로 만든 새로운 Logging 라이브러리이다. SLF4J를 통해 다른 로깅 프레임워크를 logback으로 통합할 수 있다. Log4j보다 10배
+ * 높은 속도 퍼포먼스를 보이도록 설계되어있으며 메모리 효율을 개선하였다. 설정 파일 변경시 서버 재가동 없이도 자동 변경 갱신이 이루어진다. 로깅 I/O시 Failure에 대한
+ * 복구를 서버 중지 없이도 지원하고있다. Logback사용을 위해서는 SLF4J와 함께 사용해야 한다.(Logback은 SLF4J의 구현체이다)
+ * <p>
+ * Log4j2 멀티 스레드 환경에서 Logback보다 10배 높은 성능 퍼포먼스를 기대할 수 있다. Log4j, Logback에 존재하는 동기화 이슈 문제를 해결하였다. 멀티
+ * 스레드 환경 로깅이 필요하다면 Log4j2를 사용하는 것이 성능면에서 유리하다. 사용자 정의 로그레벨과 람다 표현식을 지원한다. Log4j2 자체적으로 직접 사용할 수는
+ * 있지만 일반적으로는 SLF4J와 함께 사용한다.
+ * </p>
+ * 
+ * @Log @Slf4j @Log4j2 등 어노테이션 적용시 자동으로 log 필드를 만들고 해당 클래스의 이름으로 로거 객체를 생성하여 할당한다.
+ * 
+ * @author haksong
+ *
+ */
 @RestController
 @RequestMapping("/user/")
 @Log4j2
@@ -174,15 +195,15 @@ public class UserController {
 	
 	/*======================= response 객체 ======================= */
 	
-	 @Getter
-	 @AllArgsConstructor
-	 @RequiredArgsConstructor
+	 @Getter                   
+	 @AllArgsConstructor       // 필드값을 모두 포함한 생성자를 자동 생성해준다.
+	 @RequiredArgsConstructor  // 생성자를 자동 생성하지만, 필드명 위에 @nonNull로 표기된 경우만 생성자의 매개변수로 받는다.
 	 private static class LoginResponse {
 	   enum LoginStatus {
 	     SUCCESS, FAIL, DELETED
 	   }
 
-	   @NonNull
+	   @NonNull //null을 허용하지 하지 않음
 	   private LoginStatus result;
 	   private UserDTO userDTO;
 

@@ -70,7 +70,7 @@
     	   AND login_no = #{loginNo}
     </select>
 	
-    <insert id="insert" parameterType="com.market.server.dto.UserDTO">
+    <insert id="insert" parameterType="com.market.server.dto.user.UserDTO">
     	<selectKey keyProperty="loginNo" resultType="String" order="BEFORE">
     	SELECT MAX(login_no) + 1 FROM TBL_USER_INFO
     	</selectKey>
@@ -97,7 +97,7 @@
         )
     </insert>
     
- 	<update id="updatePassword" parameterType="com.market.server.dto.UserDTO">
+ 	<update id="updatePassword" parameterType="com.market.server.dto.user.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET login_pw = #{loginPw}
  		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %h:%i')
@@ -105,7 +105,7 @@
  		   AND login_no = #{loginNo}
  	</update>
  	
- 	<update id="update" parameterType="com.market.server.dto.UserDTO">
+ 	<update id="update" parameterType="com.market.server.dto.user.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET user_nm        = #{userNm}
  		     , hp_num         = #{hpNum}
@@ -120,7 +120,7 @@
  		   AND login_no = #{loginNo}
  	</update>
  	
- 	<update id="delete" parameterType="com.market.server.dto.UserDTO">
+ 	<update id="delete" parameterType="com.market.server.dto.user.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET status   = 'DELETE'
  		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s') 
