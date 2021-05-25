@@ -23,6 +23,9 @@ Git Flow를 사용하여 branch를 관리<br>
 * Release : 배포를 준비할 때 사용합니다.
 * Hot-Fix : 배포를 진행한 후 발생한 버그를 수정해야 할 때 사용합니다.
 
+브랜치 관리 전략 참고 문헌
+* http://woowabros.github.io/experience/2017/10/30/baemin-mobile-git-branch-strategy.html
+
 # 사용 기술 및 환경
 * Spring Boot, Maven, Mybatis, Mysql, Redis, Java8
 
