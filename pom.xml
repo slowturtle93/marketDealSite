@@ -39,6 +39,18 @@
 			<version>8.0.20</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>net.rakugakibox.util</groupId>
+			<artifactId>yaml-resource-bundle</artifactId>
+			<version>1.1</version>
+		</dependency>
+		
+		<!-- AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		
 		<!-- myabtis -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
