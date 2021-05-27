@@ -18,6 +18,7 @@
         <result property="zipNo"        column="zip_no"/>
         <result property="addrDetail"   column="addr_detail"/>
         <result property="nickName"     column="nick_name"/>
+        <result property="status"       column="status"/>
         <result property="point"        column="point"/>
         <result property="regDttm"      column="reg_dttm"/>
         <result property="updDttm"      column="upd_dttm"/>
@@ -42,14 +43,8 @@
 	    , upd_dttm
 	</sql>
 	
-	<select id="isDuplicatedId" resultType="int">
-		SELECT COUNT(loginId)
-		  FROM TBL_USER_INFO
-		 WHERE loginId = #{id}
-	</select>
-	
-	<select id="login" resultType="userDTO">
-    	SELECT login_num      AS loginNum
+	<select id="getUserInfo" resultType="userDTO">
+		SELECT login_no       AS loginNo
     	     , login_id       AS loginId
     	     , user_nm        AS userNm
     	     , login_pw       AS loginPw
@@ -67,11 +62,43 @@
     	     , upd_dttm       AS updDttm
     	  FROM TBL_USER_INFO
     	 WHERE 1=1
-    	   AND login_no = #{loginNo}
+    	   AND login_id = #{loginId}
+    	   AND status   = 'DEFAULT'
+	</select>
+	
+	<select id="isDuplicatedId" resultType="int">
+		SELECT COUNT(*)
+		  FROM TBL_USER_INFO
+		 WHERE login_id = #{loginId}
+		   AND status   = 'DEFAULT'
+	</select>
+	
+	<select id="findByIdAndPassword" resultType="userDTO">
+    	SELECT login_no       AS loginNo
+    	     , login_id       AS loginId
+    	     , user_nm        AS userNm
+    	     , login_pw       AS loginPw
+    	     , hp_num         AS hpNum
+    	     , email
+    	     , user_level     AS userLevel 
+    	     , road_full_addr AS roadFullAddr
+    	     , jibun_addr     AS jibunAddr
+    	     , zip_no         AS zipNo
+    	     , addr_detail    AS addrDetail
+    	     , nick_name      AS nickName
+    	     , point
+    	     , status
+    	     , reg_dttm       AS regDttm
+    	     , upd_dttm       AS updDttm
+    	  FROM TBL_USER_INFO
+    	 WHERE 1=1
+    	   AND login_id = #{loginId}
+    	   AND login_pw = #{loginPw}
+    	   AND status   = 'DEFAULT'
     </select>
 	
     <insert id="insert" parameterType="com.market.server.dto.user.UserDTO">
-    	<selectKey keyProperty="loginNo" resultType="String" order="BEFORE">
+    	<selectKey keyProperty="loginNo" resultType="int" order="BEFORE">
     	SELECT MAX(login_no) + 1 FROM TBL_USER_INFO
     	</selectKey>
     	
@@ -90,19 +117,20 @@
         	, #{zipNo}
         	, #{addrDetail}
         	, #{nickName}
-        	, #{point}
+        	, 0
         	, 'DEFAULT'
-        	, DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
-        	, DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
+        	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
         )
     </insert>
     
  	<update id="updatePassword" parameterType="com.market.server.dto.user.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET login_pw = #{loginPw}
- 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %h:%i')
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %h:%i')
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
+ 		   AND status   = 'DEFAULT'
  	</update>
  	
  	<update id="update" parameterType="com.market.server.dto.user.UserDTO">
@@ -115,15 +143,16 @@
  		     , zip_no         = #{zipNo}
  		     , addr_detail    = #{addrDetail}
  		     , nick_name      = #{nickName}
- 		     , upd_dttm       = DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s')
+ 		     , upd_dttm       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
+ 		   AND status   = 'DEFAULT'
  	</update>
  	
  	<update id="delete" parameterType="com.market.server.dto.user.UserDTO">
  		UPDATE TBL_USER_INFO
  		   SET status   = 'DELETE'
- 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %p %H:%i:%s') 
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') 
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  	</update>

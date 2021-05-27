@@ -16,7 +16,23 @@ import lombok.extern.log4j.Log4j2;
 public class UserServiceImpl implements UserService{
 	
 	@Autowired
-	private UserMapper userMapper;
+	private final UserMapper userMapper;
+	
+	public UserServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+	
+	/**
+	 * 회원의 정보를 가져온다.
+	 * 
+	 * @param loginId
+	 * @return UesrDTO 
+	 * 
+	 */
+	@Override
+	public UserDTO getUserInfo(String loginId) {
+		return userMapper.getUserInfo(loginId);
+	}
 
 	/**
 	 * 회원가입 시 아이디 중복 체크를 진행한다.
@@ -25,8 +41,8 @@ public class UserServiceImpl implements UserService{
 	 * @return true : 중복된 아이디, false : 중복되지 않은 아이디
 	 */
 	@Override
-	public boolean isDuplicatedId(String id) {
-		return userMapper.isDuplicatedId(id) == 1;
+	public boolean isDuplicatedId(String loginId) {
+		return userMapper.isDuplicatedId(loginId) == 1;
 	}
 
 	/**
@@ -36,20 +52,14 @@ public class UserServiceImpl implements UserService{
 	 * @param userDTO 저장할 회원정보
 	 */
 	@Override
-	public void insert(UserDTO userDTO) {
+	public int insert(UserDTO userDTO) {
 		boolean duplIdResult = isDuplicatedId(userDTO.getLoginId());
 		if(duplIdResult) {
 			throw new DuplicateIdException("중복된 아이디입니다.");
 		}
 		
 		userDTO.setLoginPw(SHA256Util.encryptSHA256(userDTO.getLoginPw()));
-		int result = userMapper.insert(userDTO);
-		
-		if(result != 1) {
-			log.error("insertMember ERROR! {}", userDTO);
-			throw new RuntimeException(
-				"insertUser Error 회원가입 메서드를 확인해주세요.\n" + "params : " + userDTO);
-		}
+		return userMapper.insert(userDTO);
 	}
 
 	/**
@@ -62,7 +72,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDTO login(String loginId, String loginPw) {
 		String cryptoPassword = SHA256Util.encryptSHA256(loginPw);
-		UserDTO userDTO = userMapper.login(loginId, cryptoPassword);
+		UserDTO userDTO = userMapper.findByIdAndPassword(loginId, cryptoPassword);
 		return userDTO;
 	}
 	
@@ -75,19 +85,13 @@ public class UserServiceImpl implements UserService{
 	 * @return
 	 */
 	@Override
-	public void updatePassword(String id, String passwordBeforeChange, String passwordAfterChange) {
-		String cryptoPasswordBeforeChange = SHA256Util.encryptSHA256(passwordBeforeChange);
-		
-		if(userMapper.login(id, cryptoPasswordBeforeChange) == null) {
-			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-		}
+	public int updatePassword(int loginNo, String loginId, String passwordBeforeChange, String passwordAfterChange) {
+		passwordMatch(loginId, passwordBeforeChange); //비밀번호 일치 여부 확인
 		
 		String cryptoPasswordAfterChange = SHA256Util.encryptSHA256(passwordAfterChange);
-		int result = userMapper.updatePassword(id, cryptoPasswordAfterChange);
-		if(result != 1) {
-			log.error("update Password Error id : {}, pw : {}", id, passwordAfterChange);
-			throw new RuntimeException("update Password Error!");
-		}
+		int result = userMapper.updatePassword(loginNo, cryptoPasswordAfterChange);
+		
+		return result;
 	}
 
 	/**
@@ -101,18 +105,35 @@ public class UserServiceImpl implements UserService{
 	public void update(UserDTO userDTO) {
 		int result = userMapper.update(userDTO);
 		if(result != 1) {
-			log.error("update User address Error!");
-			throw new RuntimeException("update User address Error!");
+			log.error("update User Info Error!");
+			throw new RuntimeException("update User Info Error!");
 		}
 	}
 
+	/**
+	 * 회원 정보를 삭제한다. status 상태값을 DELETE로 UPDATE
+	 * 
+	 * @param loginNo 
+	 * @return int
+	 */
 	@Override
-	public void delete(String loginId) {
-		int result = userMapper.delete(loginId);
-		if(result != 1) {
-			log.error("delete User Error! id : {}", loginId);
-			throw new RuntimeException("delete User Error!");
+	public int delete(int loginNo) {
+		return userMapper.delete(loginNo);
+	}
+
+	/**
+	 * 로그인 아이디와 비밀번호 일치 여부 확인
+	 * 
+	 * @param loginId 
+	 * @param loginPw 
+	 */
+	@Override
+	public void passwordMatch(String loginId, String loginPw) {
+		String password = SHA256Util.encryptSHA256(loginPw);
+		
+		if(userMapper.findByIdAndPassword(loginId, password) == null) {
+			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
 	}
-	
+
 }

@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.market.server.aop.LoginCheck;
+import com.market.server.aop.LoginCheck.UserType;
 import com.market.server.dto.user.UserDTO;
-import com.market.server.service.user.UserService;
+import com.market.server.service.user.Impl.UserServiceImpl;
 import com.market.server.utils.SessionUtil;
 
 import lombok.AllArgsConstructor;
@@ -55,8 +58,26 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserController {
 	
+	private final UserServiceImpl userService;
+	
 	@Autowired
-	private UserService userService;
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+	
+	/**
+	 * 회원이 myPage 클릭 시 사용자 정보 반환
+	 * 
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("myInfo")
+	@LoginCheck(type = UserType.USER)
+	public UserInfoResponse userInfo(HttpSession session) {
+		String id = SessionUtil.getLoginUserId(session);
+		UserDTO userDTO = userService.getUserInfo(id);
+		return new UserInfoResponse(userDTO);
+	}
 
 	/**
 	 * 회원가입 시 ID 중복체크 여부 확인.
@@ -81,11 +102,27 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("signUp")
-	public void register(@RequestBody @NotNull UserDTO userDTO){
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<UserResultResponse> register(@RequestBody @NotNull UserDTO userDTO){
+		ResponseEntity<UserResultResponse> responseEntity = null;
+		UserResultResponse userResultResponse;
+		
 	    if(UserDTO.hasNullDataBeforeSignup(userDTO)) {
 	    	throw new NullPointerException("회원가입 시 필수 입력값을 모두 입력해야 합니다.");
 	    }
-	    userService.insert(userDTO);
+	    
+	    int result = userService.insert(userDTO);
+	    
+	    if(result == 1) {
+	    	userResultResponse = UserResultResponse.SUCCESS;
+		    responseEntity = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.OK);
+	    }else {
+	    	log.error("insertUser ERROR! {}", userDTO);
+	    	userResultResponse = UserResultResponse.FAIL;
+		    responseEntity = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.UNAUTHORIZED);
+	    }
+	    
+	    return responseEntity;
 	}
 	
 	/**
@@ -100,13 +137,13 @@ public class UserController {
 		ResponseEntity<LoginResponse> responseEntity = null;
 		LoginResponse loginResponse;
 		UserDTO userDTO = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
-		
+
 		if(userDTO == null) { // ID, PW에 맞는 정보가 없을 때
 			 loginResponse = LoginResponse.FAIL;
 			 responseEntity = new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.UNAUTHORIZED);
 		}else if(UserDTO.Status.DEFAULT.equals(userDTO.getStatus())) { // 로그인 성공 시 세션에 ID 저장
 			loginResponse = LoginResponse.success(userDTO);
-			SessionUtil.setLoginId(session, loginRequest.getLoginNo(), loginRequest.getLoginId());
+			SessionUtil.setLoginUserInfo(session, userDTO.getLoginNo(), loginRequest.getLoginId());
 			responseEntity = new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
 		}else { // 예상하지 못한 오류일 경우
 			log.error("login Error " + responseEntity);
@@ -123,7 +160,7 @@ public class UserController {
 	 */
 	@GetMapping("logout")
 	public void logout(HttpSession session) {
-		SessionUtil.logoutUser(session);
+		SessionUtil.logoutUserInfo(session);
 	}
 	
 	/**
@@ -132,30 +169,47 @@ public class UserController {
 	 * @param passwordRequest
 	 * @param session
 	 */
-	@PatchMapping("updatePW")
-	public void UserUpdatePassword(@RequestBody @NotNull UpdatePasswordRequest passwordRequest, HttpSession session) {
-		String passwordBeforeChange = passwordRequest.getPasswordBeforeChange();
-	    String passwordAfterChange  = passwordRequest.getPasswordAfterChange();
-	    String id = SessionUtil.getLoginId(session);
+	@PatchMapping("password")
+	@LoginCheck(type = UserType.USER)
+	public ResponseEntity<UserResultResponse> UserUpdatePassword(@RequestBody @NotNull UpdatePasswordRequest passwordRequest,
+			                                                     HttpSession session) {
+		ResponseEntity<UserResultResponse> responseEntity = null;
+		UserResultResponse userResultResponse;
+		String passwordBeforeChange = (String) passwordRequest.getPasswordBeforeChange();
+	    String passwordAfterChange  = (String) passwordRequest.getPasswordAfterChange();
+	    String loginId = SessionUtil.getLoginUserId(session);
+	    int loginNo    = SessionUtil.getLoginUserNo(session);
 	    
 	    if(passwordAfterChange == null || passwordBeforeChange == null) { // 유효성 검사
 	    	throw new NullPointerException("패스워드를 입력해주세요.");
-	    }else {
-	    	userService.updatePassword(id, passwordBeforeChange, passwordAfterChange);
 	    }
+	    
+	    int result = userService.updatePassword(loginNo, loginId, passwordBeforeChange, passwordAfterChange);
+	    
+	    if(result == 1) {
+	    	userResultResponse = UserResultResponse.SUCCESS;
+		    responseEntity = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.OK);
+	    }else {
+	    	log.error("update Password Error id : {}, pw : {}", loginId, passwordAfterChange);
+	    	userResultResponse = UserResultResponse.FAIL;
+		    responseEntity = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.UNAUTHORIZED);
+	    }
+	    
+	    return responseEntity;
 	}
 	
 	/**
-	 * 회원 정보 변경
+	 * 회원 정보 필수 값 NULL체크 후 회원 정보 업데이트 진행
 	 * 
 	 * @param updateAddressRequest
 	 * @param session
 	 * @return
 	 */
 	@PatchMapping("update")
-	public ResponseEntity<UpdateUserResponse> updataAddress(@RequestBody @NotNull UserDTO userDTO, HttpSession session){
+	@LoginCheck(type = UserType.USER)
+	public ResponseEntity<UpdateUserResponse> updataAddress(@RequestBody UserDTO userDTO, HttpSession session){
 		ResponseEntity<UpdateUserResponse> responseEntity = null;
-		userDTO.setLoginId(SessionUtil.getLoginId(session));
+		userDTO.setLoginNo(SessionUtil.getLoginUserNo(session));
 		
 		if(userDTO.getRoadFullAddr() == null || userDTO.getJibunAddr() == null || userDTO.getZipNo() == null) {
 			//주소 정보 NULL인 경우
@@ -175,21 +229,38 @@ public class UserController {
 		}else {
 			//수정 정보 이상 없을 시
 			userService.update(userDTO);
-			responseEntity = new ResponseEntity<UpdateUserResponse>(HttpStatus.OK);
+			responseEntity = new ResponseEntity<UpdateUserResponse>(UpdateUserResponse.SUCCESS, HttpStatus.OK);
 		}
 		
 		return responseEntity;
 	}
 	
 	
-	
+	/**
+	 * 회원 정보 삭제하기 전 비밀번호 인증 일치여부 확인 후 회원 정보 삭제 진행
+	 * 
+	 * @param userDelete
+	 * @param session
+	 * @return
+	 */
 	@DeleteMapping("delete")
-	public ResponseEntity<LoginResponse> deleteUser(@RequestBody UserDelete userDelete, HttpSession session){
-		ResponseEntity<LoginResponse> responseEntity = null;
-		String loginId = SessionUtil.getLoginId(session);
-		userService.delete(loginId);
+	@LoginCheck(type = UserType.USER)
+	public ResponseEntity<UserResultResponse> deleteUser(@RequestBody @NotNull UserDelete userDelete, HttpSession session){
+		ResponseEntity<UserResultResponse> responseEntity = null;
+		UserResultResponse userResultResponse;
 		
-		return responseEntity;
+		int loginNo = SessionUtil.getLoginUserNo(session);
+		int result  = userService.delete(loginNo);
+		
+		if(result == 1) {
+			userResultResponse = UserResultResponse.SUCCESS;
+		    responseEntity     = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.OK);
+		}else {
+			log.error("delete User Error! id : {}", SessionUtil.getLoginUserId(session));
+			userResultResponse = UserResultResponse.FAIL;
+		    responseEntity     = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.NOT_FOUND);
+		}
+	    return responseEntity;
 	}
 	
 	
@@ -214,15 +285,39 @@ public class UserController {
 	   }
 	 }
 	
+     @Getter
+     @AllArgsConstructor
+     private static class UserInfoResponse {
+         private UserDTO userDTO;
+     }
+     
+     @Getter
+     private static class UserResultResponse{
+    	 enum UserResultStatus{
+    		 SUCCESS, FAIL
+    	 }
+    	 
+    	 @NonNull
+    	 UserResultStatus message;
+    	 
+    	 private static final UserResultResponse SUCCESS = new UserResultResponse(UserResultStatus.SUCCESS);
+    	 private static final UserResultResponse FAIL    = new UserResultResponse(UserResultStatus.FAIL);
+    	 
+    	 public UserResultResponse(UserResultStatus message) {
+   	      this.message = message;
+   	    }
+     }
+	
 	  @Getter
 	  private static class UpdateUserResponse {
 	    enum UpdateStatus {
-	      EMPTY_ADDRESS, EMPTY_ADDRESS_DETAIL, EMPTY_HPNUMBER, EMPTY_EMAIL, EMPTY_USERNM 
+	    	SUCCESS, EMPTY_ADDRESS, EMPTY_ADDRESS_DETAIL, EMPTY_HPNUMBER, EMPTY_EMAIL, EMPTY_USERNM 
 	    }
 
 	    @NonNull
 	    private UpdateStatus message;
 
+	    private static final UpdateUserResponse SUCCESS              = new UpdateUserResponse(UpdateStatus.SUCCESS);
 	    private static final UpdateUserResponse EMPTY_ADDRESS        = new UpdateUserResponse(UpdateStatus.EMPTY_ADDRESS);
 	    private static final UpdateUserResponse EMPTY_ADDRESS_DETAIL = new UpdateUserResponse(UpdateStatus.EMPTY_ADDRESS_DETAIL);
 	    private static final UpdateUserResponse EMPTY_HPNUMBER       = new UpdateUserResponse(UpdateStatus.EMPTY_HPNUMBER);
@@ -234,13 +329,11 @@ public class UserController {
 	    }
 	  }
 	
-	/*======================= response 객체 ======================= */
+	/*======================= request 객체 ======================= */
 	
 	  @Getter
 	  @Setter
 	  private static class UserLoginRequest {
-	    @NonNull
-	    private String loginNo;
 	    @NonNull
 	    private String loginId;
 	    @NonNull

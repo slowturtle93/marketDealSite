@@ -4,15 +4,19 @@ import com.market.server.dto.user.UserDTO;
 
 public interface UserService {
 	
-	boolean isDuplicatedId(String id);
+	public void passwordMatch(String loginId, String loginPw);
 	
-	public void insert(UserDTO userDTO);
+	public UserDTO getUserInfo(String loginId);
+	
+	boolean isDuplicatedId(String loginId);
+	
+	public int insert(UserDTO userDTO);
 	
 	public UserDTO login(String loginId, String loginPw);
 	
-	public void updatePassword(String id, String passwordBeforeChange, String passwordAfterChange);
+	public int updatePassword(int loginNo, String loginId, String passwordBeforeChange, String passwordAfterChange);
 	
 	public void update(UserDTO userDTO);
 	
-	public void delete(String loginId);
+	public int delete(int loginNo);
 }
