@@ -250,9 +250,14 @@ public class UserController {
 		UserResultResponse userResultResponse;
 		
 		int loginNo = SessionUtil.getLoginUserNo(session);
+		String loginId = SessionUtil.getLoginUserId(session);
 		int result  = userService.delete(loginNo);
 		
+		//삭제 전 비밀번호 확인
+		userService.passwordMatch(loginId, userDelete.getLoginPw());
+		
 		if(result == 1) {
+			logout(session);
 			userResultResponse = UserResultResponse.SUCCESS;
 		    responseEntity     = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.OK);
 		}else {
@@ -262,7 +267,6 @@ public class UserController {
 		}
 	    return responseEntity;
 	}
-	
 	
 	/*======================= response 객체 ======================= */
 	
@@ -352,8 +356,6 @@ public class UserController {
 	  @Setter
 	  @Getter
 	  private static class UserDelete {
-	      @NonNull
-	      private String loginId;
 	      @NonNull
 	      private String loginPw;
 	  }
