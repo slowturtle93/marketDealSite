@@ -25,42 +25,42 @@
 	</resultMap>
 	
 	<sql id="cols">
-		  login_no
-	    , login_id
-	    , user_nm
-	    , login_pw
-	    , hp_num
-	    , email
-	    , user_level
-	    , road_full_addr
-	    , jibun_addr
-	    , zip_no
-	    , addr_detail
-	    , nick_name
-	    , point
-	    , status
-	    , reg_dttm
-	    , upd_dttm
+		  login_no       /* 사용자번호 */
+	    , login_id       /* 로그인아이디 */
+	    , user_nm        /* 사용자명 */
+	    , login_pw       /* 비밀번호 */
+	    , hp_num         /* 휴대폰번호 */
+	    , email          /* 이메일 */
+	    , user_level     /* 회원등급 */
+	    , road_full_addr /* 도로명주소 */
+	    , jibun_addr     /* 지번주소 */
+	    , zip_no         /* 우편번호 */
+	    , addr_detail    /* 상세주소 */
+	    , nick_name      /* 닉네임 */
+	    , point          /* 포인트 */
+	    , status         /* 상태 */
+	    , reg_dttm       /* 등록일시 */
+	    , upd_dttm       /* 수정일시 */
 	</sql>
 	
 	<select id="getUserInfo" resultType="userDTO">
-		SELECT login_no       AS loginNo
-    	     , login_id       AS loginId
-    	     , user_nm        AS userNm
-    	     , login_pw       AS loginPw
-    	     , hp_num         AS hpNum
-    	     , email
-    	     , user_level     AS userLevel 
-    	     , road_full_addr AS roadFullAddr
-    	     , jibun_addr     AS jibunAddr
-    	     , zip_no         AS zipNo
-    	     , addr_detail    AS addrDetail
-    	     , nick_name      AS nickName
-    	     , point
-    	     , status
-    	     , reg_dttm       AS regDttm
-    	     , upd_dttm       AS updDttm
-    	  FROM TBL_USER_INFO
+		SELECT login_no       AS loginNo      /* 사용자번호 */
+    	     , login_id       AS loginId      /* 로그인아이디 */
+    	     , user_nm        AS userNm       /* 사용자명 */
+    	     , login_pw       AS loginPw      /* 비밀번호 */
+    	     , hp_num         AS hpNum        /* 휴대폰번호 */
+    	     , email                          /* 이메일 */
+    	     , user_level     AS userLevel    /* 회원등급 */
+    	     , road_full_addr AS roadFullAddr /* 도로명주소 */
+    	     , jibun_addr     AS jibunAddr    /* 지번주소 */
+    	     , zip_no         AS zipNo        /* 우편번호 */
+    	     , addr_detail    AS addrDetail   /* 상세주소 */
+    	     , nick_name      AS nickName     /* 닉네임 */
+    	     , point                          /* 포인트 */
+    	     , status                         /* 상태 */
+    	     , reg_dttm       AS regDttm      /* 등록일시 */
+    	     , upd_dttm       AS updDttm      /* 수정일시 */
+    	  FROM TBL_USER_INFO                  /* 사용자정보 */
     	 WHERE 1=1
     	   AND login_id = #{loginId}
     	   AND status   = 'DEFAULT'
@@ -68,29 +68,29 @@
 	
 	<select id="isDuplicatedId" resultType="int">
 		SELECT COUNT(*)
-		  FROM TBL_USER_INFO
+		  FROM TBL_USER_INFO /* 사용자정보 */
 		 WHERE login_id = #{loginId}
 		   AND status   = 'DEFAULT'
 	</select>
 	
 	<select id="findByIdAndPassword" resultType="userDTO">
-    	SELECT login_no       AS loginNo
-    	     , login_id       AS loginId
-    	     , user_nm        AS userNm
-    	     , login_pw       AS loginPw
-    	     , hp_num         AS hpNum
-    	     , email
-    	     , user_level     AS userLevel 
-    	     , road_full_addr AS roadFullAddr
-    	     , jibun_addr     AS jibunAddr
-    	     , zip_no         AS zipNo
-    	     , addr_detail    AS addrDetail
-    	     , nick_name      AS nickName
-    	     , point
-    	     , status
-    	     , reg_dttm       AS regDttm
-    	     , upd_dttm       AS updDttm
-    	  FROM TBL_USER_INFO
+    	SELECT login_no       AS loginNo      /* 사용자번호 */
+    	     , login_id       AS loginId      /* 로그인아이디 */
+    	     , user_nm        AS userNm       /* 사용자명 */
+    	     , login_pw       AS loginPw      /* 비밀번호 */
+    	     , hp_num         AS hpNum        /* 휴대폰번호 */
+    	     , email                          /* 이메일 */
+    	     , user_level     AS userLevel    /* 사용자명 */
+    	     , road_full_addr AS roadFullAddr /* 도로명주소 */
+    	     , jibun_addr     AS jibunAddr    /* 지번주소 */
+    	     , zip_no         AS zipNo        /* 우편번호 */
+    	     , addr_detail    AS addrDetail   /* 상세주소 */
+    	     , nick_name      AS nickName     /* 닉네임 */
+    	     , point                          /* 포인트 */
+    	     , status                         /* 상태 */
+    	     , reg_dttm       AS regDttm      /* 등록일시 */
+    	     , upd_dttm       AS updDttm      /* 수정일시 */
+    	  FROM TBL_USER_INFO                  /* 사용자정보 */
     	 WHERE 1=1
     	   AND login_id = #{loginId}
     	   AND login_pw = #{loginPw}
@@ -125,34 +125,34 @@
     </insert>
     
  	<update id="updatePassword" parameterType="com.market.server.dto.user.UserDTO">
- 		UPDATE TBL_USER_INFO
- 		   SET login_pw = #{loginPw}
- 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %h:%i')
+ 		UPDATE TBL_USER_INFO         /* 사용자정보 */
+ 		   SET login_pw = #{loginPw} /* 비밀번호 */
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %h:%i') /* 수정일시 */
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  		   AND status   = 'DEFAULT'
  	</update>
  	
  	<update id="update" parameterType="com.market.server.dto.user.UserDTO">
- 		UPDATE TBL_USER_INFO
- 		   SET user_nm        = #{userNm}
- 		     , hp_num         = #{hpNum}
- 		     , email          = #{email}
- 		     , road_full_addr = #{roadFullAddr}
- 		     , jibun_addr     = #{jibunAddr}
- 		     , zip_no         = #{zipNo}
- 		     , addr_detail    = #{addrDetail}
- 		     , nick_name      = #{nickName}
- 		     , upd_dttm       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+ 		UPDATE TBL_USER_INFO                    /* 사용자정보 */
+ 		   SET user_nm        = #{userNm}       /* 사용자명 */
+ 		     , hp_num         = #{hpNum}        /* 휴대폰번호 */
+ 		     , email          = #{email}        /* 이메일 */
+ 		     , road_full_addr = #{roadFullAddr} /* 도로명주소 */
+ 		     , jibun_addr     = #{jibunAddr}    /* 지번주소 */
+ 		     , zip_no         = #{zipNo}        /* 우편번호 */
+ 		     , addr_detail    = #{addrDetail}   /* 상세주소 */
+ 		     , nick_name      = #{nickName}     /* 닉네임 */
+ 		     , upd_dttm       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  		   AND status   = 'DEFAULT'
  	</update>
  	
  	<update id="delete" parameterType="com.market.server.dto.user.UserDTO">
- 		UPDATE TBL_USER_INFO
- 		   SET status   = 'DELETE'
- 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') 
+ 		UPDATE TBL_USER_INFO       /* 사용자정보 */
+ 		   SET status   = 'DELETE' /* 상태 */
+ 		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
  	</update>

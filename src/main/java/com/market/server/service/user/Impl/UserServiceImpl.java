@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService{
 	 */
 	@Override
 	public int insert(UserDTO userDTO) {
-		boolean duplIdResult = isDuplicatedId(userDTO.getLoginId());
+		boolean duplIdResult = isDuplicatedId(userDTO.getLoginId()); // 아이디 중복 체크
 		if(duplIdResult) {
 			throw new DuplicateIdException("중복된 아이디입니다.");
 		}
 		
-		userDTO.setLoginPw(SHA256Util.encryptSHA256(userDTO.getLoginPw()));
+		userDTO.setLoginPw(SHA256Util.encryptSHA256(userDTO.getLoginPw())); //비밀번호 암호화
 		return userMapper.insert(userDTO);
 	}
 
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService{
 	 */
 	@Override
 	public UserDTO login(String loginId, String loginPw) {
-		String cryptoPassword = SHA256Util.encryptSHA256(loginPw);
+		String cryptoPassword = SHA256Util.encryptSHA256(loginPw); // 비밀번호 암호화
 		UserDTO userDTO = userMapper.findByIdAndPassword(loginId, cryptoPassword);
 		return userDTO;
 	}
@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int updatePassword(int loginNo, String loginId, String passwordBeforeChange, String passwordAfterChange) {
 		passwordMatch(loginId, passwordBeforeChange); //비밀번호 일치 여부 확인
+		String cryptoPasswordAfterChange = SHA256Util.encryptSHA256(passwordAfterChange); //비밀번호 암호화
 		
-		String cryptoPasswordAfterChange = SHA256Util.encryptSHA256(passwordAfterChange);
 		int result = userMapper.updatePassword(loginNo, cryptoPasswordAfterChange);
 		
 		return result;
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService{
 	 */
 	@Override
 	public void passwordMatch(String loginId, String loginPw) {
-		String password = SHA256Util.encryptSHA256(loginPw);
+		String password = SHA256Util.encryptSHA256(loginPw); //비밀번호 암호화
 		
 		if(userMapper.findByIdAndPassword(loginId, password) == null) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
