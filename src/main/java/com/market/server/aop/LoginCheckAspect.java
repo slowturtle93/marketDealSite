@@ -2,12 +2,8 @@ package com.market.server.aop;
 
 import javax.servlet.http.HttpSession;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -29,11 +25,6 @@ import lombok.extern.log4j.Log4j2;
  * @Aspect가 명시된 빈에는 어드바이스(Advice)라 불리는 메써드를 작성할 수 있다.
  * 대상 스프링 빈의 메써드의 호출에 끼어드는 시점과 방법에 따라
  * @Before, @After, @AfterReturning, @AfterThrowing, @Around
- * 
- * @Order(Ordered.LOWEST_PRECEDENCE)
- * 클래스 레벨에 @Order를 명시하여 @Aspect 빈 간의 작동 순서를 정할 수 있다.
- * int 타입의 정수로 순서를 정할 수 있는데 값이 낮을수록 우선순위가 높다.
- * 기본값은 가장 낮은 우선순위를 가지는 Ordered.LOWEST_PRECEDENCE이다.
  * 
  * @Log4j2
  * Login Check할때 aop의 Aspect 애노테이션을 이용하여
