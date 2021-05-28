@@ -99,7 +99,7 @@
 	
     <insert id="insert" parameterType="com.market.server.dto.user.UserDTO">
     	<selectKey keyProperty="loginNo" resultType="int" order="BEFORE">
-    	SELECT MAX(login_no) + 1 FROM TBL_USER_INFO
+    	SELECT IFNULL(MAX(login_no), 0) + 1 FROM TBL_USER_INFO
     	</selectKey>
     	
         INSERT INTO TBL_USER_INFO (
