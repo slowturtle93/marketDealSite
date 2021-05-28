@@ -1,23 +1,23 @@
 package com.market.server.mapper.user;
 
-import org.springframework.stereotype.Repository;
-
 import com.market.server.dto.user.UserDTO;
 
-import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.*;
 
-@Repository
+@Mapper
 public interface UserMapper {
 	
-	int isDuplicatedId(String id);
+	public UserDTO getUserInfo(@Param("loginId") String loginId);
+	
+	int isDuplicatedId(@Param("loginId")String loginId);
 	
 	public int insert(UserDTO userDTO);
 	
-	public UserDTO login(@Param("loginId") String loginId, @Param("loginPw") String loginPw);
+	public UserDTO findByIdAndPassword(@Param("loginId") String loginId, @Param("loginPw") String loginPw);
 	
-	public int updatePassword(String login, String loginPw);
+	public int updatePassword(@Param("loginNo") int loginNo, @Param("loginPw") String loginPw);
 	
 	public int update(UserDTO userDTO);
 	
-	public int delete(String loginId);
+	public int delete(@Param("loginNo") int loginNo);
 }
