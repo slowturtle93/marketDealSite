@@ -97,8 +97,8 @@ public class SessionUtil {
 	 * @param session
 	 * @return
 	 */
-	public static String getLoginAdminNo(HttpSession session) {
-		return (String) session.getAttribute(LOGIN_ADMIN_ID);
+	public static int getLoginAdminNo(HttpSession session) {
+		return (int) session.getAttribute(LOGIN_ADMIN_ID);
 	}
 	
 }
