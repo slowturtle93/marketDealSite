@@ -41,26 +41,6 @@
 		 WHERE login_id = #{loginId}
 		   AND status   = 'DEFAULT'
 	</select>
-	
-	<select id="login" resultType="adminDTO">
-    	SELECT admin_no AS adminNo /* 관리자번호 */
-    	     , login_id AS loginId /* 로그인아이디 */
-    	     , login_pw AS loginPw /* 비밀번호 */
-    	     , admin_nm AS adminNm /* 관리자명 */
-    	     , email               /* 이메일 */
-    	     , tel_num  AS telNum  /* 전화번호 */
-    	     , hp_num   AS hpNum   /* 휴대폰번호 */
-    	     , status              /* 상태 */
-    	     , posn                /* 직책 */
-    	     , dept                /* 부서 */
-    	     , reg_dttm AS regDttm /* 등록일시 */
-    	     , upd_dttm AS updDttm /* 수정일시 */
-    	  FROM TBL_ADMIN           /* 관리자정보 */
-    	 WHERE 1=1
-    	   AND login_id = #{loginId}
-    	   AND login_pw = #{loginPw}
-    	   AND status   = 'DEFAULT'
-    </select>
     
     <select id="findByIdAndPassword" resultType="adminDTO">
     	SELECT admin_no AS adminNo /* 관리자번호 */

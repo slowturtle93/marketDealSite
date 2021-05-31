@@ -74,8 +74,8 @@ public class UserController {
 	@GetMapping("myInfo")
 	@LoginCheck(type = UserType.USER)
 	public UserInfoResponse userInfo(HttpSession session) {
-		String id = SessionUtil.getLoginUserId(session);
-		UserDTO userDTO = userService.getUserInfo(id);
+		String loginId  = SessionUtil.getLoginUserId(session);
+		UserDTO userDTO = userService.getUserInfo(loginId);
 		return new UserInfoResponse(userDTO);
 	}
 
