@@ -26,7 +26,7 @@ public class DatabaseConfig {
         sessionFactory.setTypeAliasesPackage("com.market.server.dto.");
 
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sessionFactory.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/*/*.xml"));
+        sessionFactory.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/**/*.xml"));
         return sessionFactory.getObject();
     }
 	

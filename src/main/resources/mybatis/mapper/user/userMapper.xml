@@ -8,7 +8,7 @@
 	<resultMap id="userDTO" type="com.market.server.dto.user.UserDTO">
 		<result property="loginNo "     column="login_no"/> 
         <result property="loginId"      column="login_id"/>
-        <result property="userNm"      column="user_nm"/>
+        <result property="userNm"       column="user_nm"/>
         <result property="loginPw"      column="login_pw"/>
         <result property="hpNum"        column="hp_num"/>
         <result property="email"        column="email"/>
@@ -150,8 +150,8 @@
  	</update>
  	
  	<update id="delete" parameterType="com.market.server.dto.user.UserDTO">
- 		UPDATE TBL_USER_INFO       /* 사용자정보 */
- 		   SET status   = 'DELETE' /* 상태 */
+ 		UPDATE TBL_USER_INFO        /* 사용자정보 */
+ 		   SET status   = 'DELETED' /* 상태 */
  		     , upd_dttm = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
  		 WHERE 1=1
  		   AND login_no = #{loginNo}
