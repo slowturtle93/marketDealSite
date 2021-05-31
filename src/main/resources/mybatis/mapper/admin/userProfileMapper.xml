@@ -21,13 +21,17 @@
 	    SELECT login_no   AS loginNo   /* 로그인번호 */
 	         , login_id   AS loginId   /* 로그인아이디 */
 	         , user_nm    AS userNm    /* 사용자명 */
-	         , user_level AS userLevel /* 회원등급 */
+	         , (
+	             SELECT level_nm
+	               FROM TBL_USER_LEVEL
+	              WHERE level_code = T1.user_level
+	           ) AS userLevel          /* 회원등급 */
 	         , nick_name  AS nickName  /* 닉네임 */
 	         , status                  /* 상태 */
 	         , point                   /* 포인트 */
 	         , reg_dttm   AS regDttm   /* 등록일시 */
 	         , upd_dttm   AS updDttm   /* 수정일시 */
-	      FROM TBL_USER_INFO           /* 사용자정보 */
+	      FROM TBL_USER_INFO T1        /* 사용자정보 */
 	     WHERE 1=1
 	       <if test='loginId != null and loginId != ""'>
 	       AND login_id   = #{loginId}

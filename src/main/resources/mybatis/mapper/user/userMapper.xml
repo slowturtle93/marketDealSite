@@ -50,7 +50,11 @@
     	     , login_pw       AS loginPw      /* 비밀번호 */
     	     , hp_num         AS hpNum        /* 휴대폰번호 */
     	     , email                          /* 이메일 */
-    	     , user_level     AS userLevel    /* 회원등급 */
+    	     , (
+    	         SELECT level_nm
+    	           FROM TBL_USER_LEVEL
+    	          WHERE level_code = T1.user_level
+    	       ) AS userLevel                 /* 회원등급 */
     	     , road_full_addr AS roadFullAddr /* 도로명주소 */
     	     , jibun_addr     AS jibunAddr    /* 지번주소 */
     	     , zip_no         AS zipNo        /* 우편번호 */
@@ -60,7 +64,7 @@
     	     , status                         /* 상태 */
     	     , reg_dttm       AS regDttm      /* 등록일시 */
     	     , upd_dttm       AS updDttm      /* 수정일시 */
-    	  FROM TBL_USER_INFO                  /* 사용자정보 */
+    	  FROM TBL_USER_INFO T1               /* 사용자정보 */
     	 WHERE 1=1
     	   AND login_id = #{loginId}
     	   AND status   = 'DEFAULT'
@@ -80,7 +84,11 @@
     	     , login_pw       AS loginPw      /* 비밀번호 */
     	     , hp_num         AS hpNum        /* 휴대폰번호 */
     	     , email                          /* 이메일 */
-    	     , user_level     AS userLevel    /* 사용자명 */
+    	     , (
+    	         SELECT level_nm
+    	           FROM TBL_USER_LEVEL
+    	          WHERE level_code = T1.user_level
+    	       ) AS userLevel                 /* 회원등급 */
     	     , road_full_addr AS roadFullAddr /* 도로명주소 */
     	     , jibun_addr     AS jibunAddr    /* 지번주소 */
     	     , zip_no         AS zipNo        /* 우편번호 */
@@ -90,7 +98,7 @@
     	     , status                         /* 상태 */
     	     , reg_dttm       AS regDttm      /* 등록일시 */
     	     , upd_dttm       AS updDttm      /* 수정일시 */
-    	  FROM TBL_USER_INFO                  /* 사용자정보 */
+    	  FROM TBL_USER_INFO T1               /* 사용자정보 */
     	 WHERE 1=1
     	   AND login_id = #{loginId}
     	   AND login_pw = #{loginPw}
@@ -111,7 +119,7 @@
         	, #{loginPw}
         	, #{hpNum}
         	, #{email}
-        	, 'MEMBER'
+        	, 'M'
         	, #{roadFullAddr}
         	, #{jibunAddr}
         	, #{zipNo}

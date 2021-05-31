@@ -18,7 +18,7 @@ public class UserDTO {
 	private String loginPw;      // 로그인비밀번호
 	private String hpNum;        // 전화번호
 	private String email;        // 이메일
-	private String userLevel  ;  // 회원등급
+	private String userLevel  ;  // 회원등급 (M-MEMBER, S-SLIVER, G-GOLD, V-VIP, VV-VVIP)
 	private String roadFullAddr; // 도로명주소
 	private String jibunAddr;    // 지번주소
 	private String zipNo;        // 우편번호
