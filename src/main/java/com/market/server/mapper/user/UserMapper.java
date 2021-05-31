@@ -1,8 +1,8 @@
 package com.market.server.mapper.user;
 
-import com.market.server.dto.user.UserDTO;
-
 import org.apache.ibatis.annotations.*;
+
+import com.market.server.dto.user.UserDTO;
 
 @Mapper
 public interface UserMapper {

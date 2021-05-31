@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public AdminDTO login(String loginId, String loginPw) {
 		String cryptoPassword = SHA256Util.encryptSHA256(loginPw); //비밀번호 암호화
-		AdminDTO adminDTO = adminMapper.login(loginId, cryptoPassword);
+		AdminDTO adminDTO = adminMapper.findByIdAndPassword(loginId, cryptoPassword);
 		return adminDTO;
 	}
 

@@ -14,8 +14,6 @@ public interface AdminMapper {
 	
 	public AdminDTO findByIdAndPassword(@Param("loginId") String loginId, @Param("loginPw") String loginPw);
 	
-	public AdminDTO login(@Param("loginId") String loginId, @Param("loginPw") String loginPw);
-	
 	public int updatePassword(@Param("adminNo") int adminNo, @Param("loginPw") String loginPw);
 	
 	public int update(AdminDTO adminDTO);
