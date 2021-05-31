@@ -2,36 +2,20 @@ package com.market.server.controller.admin;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.market.server.aop.LoginCheck;
 import com.market.server.aop.LoginCheck.UserType;
 import com.market.server.dto.Search;
-import com.market.server.dto.admin.AdminDTO;
 import com.market.server.dto.user.UserDTO;
-import com.market.server.service.admin.Impl.AdminServiceImpl;
 import com.market.server.service.admin.Impl.UserProfileServiceImpl;
-import com.market.server.utils.SessionUtil;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
@@ -69,6 +53,11 @@ public class UserProfileController {
 		search.add("fromRegDttm", userProfileResponse.getFromRegDttm()); // 시작일자
 		search.add("toRegDttm",   userProfileResponse.getToRegDttm());   // 종료일자
 		
+		//페이지
+		search.add("pg",          userProfileResponse.getPg());   // 현재페이제
+		search.add("pgSz",        userProfileResponse.getPgSz()); // 한 페이지당 Row 수
+		search.setRow();                                          // 페이지 계산
+		
 		List<UserDTO> userInfo = userProfileService.getUserProfile(search);
 		
 		return userInfo;
@@ -90,7 +79,10 @@ public class UserProfileController {
 		private String userLevel;
 		private String fromRegDttm;
 		private String toRegDttm;
-		
+		@NonNull
+		private int pg;
+		@NonNull
+		private int pgSz;
 	}
 	
 }

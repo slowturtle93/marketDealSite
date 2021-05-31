@@ -56,7 +56,7 @@ public class Search extends HashMap<String, Object>{
 		return (String) (super.get(key));
 	}
 	
-	public void setRow(String type) {
+	public void setRow() {
 		int pg   = this.getInt("pg");
 		int pgSz = this.getInt("pgSz");
 		
