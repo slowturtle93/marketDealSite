@@ -48,6 +48,7 @@
 	       AND reg_dttm <![CDATA[<=]]> #{fromRegDttm}
 	       </if>
 	     ORDER BY reg_dttm DESC
+	     LIMIT #{strtRow}, #{endRow}
 	</select>
 
 </mapper>
