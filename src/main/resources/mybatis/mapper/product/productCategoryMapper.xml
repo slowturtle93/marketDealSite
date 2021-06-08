@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.product.ProductCategoryMapper">
+
+	<resultMap id="productCategoryDTO" type="com.market.server.dto.product.ProductCategoryDTO">
+		<result property="categoryCd" column="category_cd"/> 
+        <result property="categoryNm" column="category_nm"/>
+        <result property="delYn"      column="del_yn"/>
+        <result property="dispYn"     column="disp_yn"/>
+        <result property="regDttm"    column="reg_dttm"/>
+        <result property="updDttm"    column="upd_dttm"/>
+	</resultMap>
+
+	<select id="getCategory" resultType="productCategoryDTO">
+		SELECT CATEGORY_CD /* 상품카테고리코드 */
+		     , CATEGORY_NM /* 상품카테고리명 */
+		     , DEL_YN      /* 삭제여부 */
+		     , DISP_YN     /* 전시여부 */ 
+		     , REG_DTTM    /* 등록일시 */
+		     , UPD_DTTM    /* 수정일시 */
+		  FROM TBL_PRODUCT_CATEGORY
+		 WHERE 1=1
+		   <if test="delYn != null and delYn != ''">
+		   AND DEL_YN  = #{delYn}
+		   </if>
+		   <if test="dispYn != null and dispYn != ''">
+		   AND DISP_YN = #{dispYn}
+		   </if>
+		 ORDER BY REG_DTTM DESC
+	</select>
+	
+	
+	<select id="isDuplicatedNm" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		  FROM TBL_PRODUCT_CATEGORY
+		 WHERE CATEGORY_NM = #{categoryNm}
+		   AND DEL_YN = 'N'
+	</select>
+	
+	<insert id="InsertCategory" parameterType="java.util.List">
+	    <selectKey keyProperty="categorySeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(CATEGORY_SEQ), 0) + 1 FROM TBL_PRODUCT_CATEGORY
+    	</selectKey>
+	    
+		INSERT INTO TBL_PRODUCT_CATEGORY(
+		      CATEGORY_SEQ /* 상품카테고리시퀀스 */
+		    , CATEGORY_CD  /* 상품카테고코드 */
+		    , CATEGORY_NM  /* 상품카테고리명 */
+		    , DEL_YN       /* 삭제여부 */
+		    , DISP_YN      /* 전시여부 */
+		    , REG_DTTM     /* 등록일시 */
+		    , UPD_DTTM     /* 수정일시 */
+		)
+		VALUES
+		<foreach item ="category" collection="categoryList" index="index" open="" separator="," close="">
+		(
+		      (#{categorySeq} + #{index})
+			, (SELECT CONCAT('OC', LPAD((#{categorySeq} + #{index}), 3, '0')) FROM DUAL)
+			, #{category.categoryNm}
+			, 'N'
+			, 'Y'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+		</foreach>
+	</insert>
+	
+	<update id="UpdateCategory" parameterType="java.util.List">
+		<foreach item ="category" collection="categoryList" index="index" open="" separator=";" close="">
+		UPDATE TBL_PRODUCT_CATEGORY
+		   SET OP_CATEGORY_NM = #{category.categoryNm}                  /* 상품카테고리명 */
+		     , DISP_YN        = #{category.dispYn}                      /* 전시여부 */
+		     , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE OP_CATEGORY_CD = #{category.categoryCd}                  /* 상품카테고리코드 */
+		 </foreach>
+	</update>
+	
+	<update id="DeleteCategory" parameterType="java.util.List">
+		UPDATE TBL_PRODUCT_CATEGORY
+		   SET DEL_YN   = 'Y'                                     /* 삭제여부 */
+		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE 1=1
+		   AND OP_CATEGORY_CD IN 
+		   <foreach item ="category" collection="categoryList" index="index" open="(" separator="," close=")">
+		       #{category.categoryCd}
+		   </foreach>
+	</update>
+
+</mapper>
