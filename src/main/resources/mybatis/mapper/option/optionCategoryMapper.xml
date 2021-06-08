@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.option.OptionCategoryMapper">
+
+	<resultMap id="optionCategoryDTO" type="com.market.server.dto.option.OptionCategoryDTO">
+		<result property="opCategoryCd" column="op_category_cd"/> 
+        <result property="opCategoryNm" column="op_category_nm"/>
+        <result property="delYn"        column="del_yn"/>
+        <result property="dispYn"       column="disp_yn"/>
+        <result property="regDttm"      column="reg_dttm"/>
+        <result property="updDttm"      column="upd_dttm"/>
+	</resultMap>
+
+	<select id="getOpCategory" resultType="optionCategoryDTO">
+		SELECT OP_CATEGORY_CD  /* 옵션카테고리코드 */
+		     , OP_CATEGORY_NM  /* 옵션카테고리명 */
+		     , DEL_YN          /* 삭제여부 */
+		     , DISP_YN         /* 전시여부 */ 
+		     , REG_DTTM        /* 등록일시 */
+		     , UPD_DTTM        /* 수정일시 */
+		  FROM TBL_OPTION_CATEGORY
+		 WHERE 1=1
+		   <if test="delYn != null and delYn != ''">
+		   AND DEL_YN  = #{delYn}
+		   </if>
+		   <if test="dispYn != null and dispYn != ''">
+		   AND DISP_YN = #{dispYn}
+		   </if>
+		 ORDER BY REG_DTTM DESC
+	</select>
+	
+	<insert id="InsertOpCategory" parameterType="java.util.List">
+	    <selectKey keyProperty="opCategorySeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(OP_CATEGORY_SEQ), 0) + 1 FROM TBL_OPTION_CATEGORY
+    	</selectKey>
+	    
+		INSERT INTO TBL_OPTION_CATEGORY(
+		      OP_CATEGORY_SEQ /* 옵션카테고리 일련번호 */
+		    , OP_CATEGORY_CD  /* 옵션카테고리 코드 */
+		    , OP_CATEGORY_NM  /* 옵션카테고리 명 */
+		    , DEL_YN          /* 삭제여부 */
+		    , DISP_YN         /* 전시여부 */
+		    , REG_DTTM        /* 등록일시 */
+		    , UPD_DTTM        /* 수정일시 */
+		)
+		VALUES
+		<foreach item ="opCategory" collection="optionCategoryList" index="index" open="" separator="," close="">
+		(
+		      (#{opCategorySeq} + #{index})
+			, (SELECT CONCAT('OC', LPAD((#{opCategorySeq} + #{index}), 3, '0')) FROM DUAL)
+			, #{opCategory.opCategoryNm}
+			, 'N'
+			, 'Y'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+		</foreach>
+	</insert>
+	
+	<update id="UpdateOpCategory" parameterType="java.util.List">
+		<foreach item ="opCategory" collection="optionCategoryList" index="index" open="" separator=";" close="">
+		UPDATE TBL_OPTION_CATEGORY
+		   SET OP_CATEGORY_NM = #{opCategory.opCategoryNm}              /* 옵션카테고리명 */
+		     , DISP_YN        = #{opCategory.dispYn}                    /* 전시여부 */
+		     , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE OP_CATEGORY_CD = #{opCategory.opCategoryCd}              /* 옵션카테고리코드 */
+		 </foreach>
+	</update>
+	
+	<update id="DeleteOpCategory" parameterType="java.util.List">
+		UPDATE TBL_OPTION_CATEGORY
+		   SET DEL_YN   = 'Y'                                     /* 삭제여부 */
+		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE 1=1
+		   AND OP_CATEGORY_CD IN 
+		   <foreach item ="opCategory" collection="optionCategoryList" index="index" open="(" separator="," close=")">
+		       #{opCategory.opCategoryCd}
+		   </foreach>
+	</update>
+
+</mapper>
