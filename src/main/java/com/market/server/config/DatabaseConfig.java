@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -27,6 +28,11 @@ public class DatabaseConfig {
 
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(resolver.getResources("classpath:mybatis/mapper/**/*.xml"));
+        
+        // 카멜케이스 적용
+        Resource myBatisConfig = new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml");
+        sessionFactory.setConfigLocation(myBatisConfig);
+        
         return sessionFactory.getObject();
     }
 	
