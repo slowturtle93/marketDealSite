@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j2;
 
 
 @RestController
-@RequestMapping("/product/category")
+@RequestMapping("/product/category/")
 @Log4j2
 public class ProductCategoryController {
 	
