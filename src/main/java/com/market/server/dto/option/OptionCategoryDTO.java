@@ -26,7 +26,7 @@ public class OptionCategoryDTO {
 	/**
 	 * 옵션 카테고리 필수 값 NULL 체크
 	 * 
-	 * @param OptionCategoryDTO
+	 * @param ProductCategoryDTO
 	 * @return
 	 */
 	public static boolean hasNullDataBeforeRegister(OptionCategoryDTO optionCategoryDTO) {

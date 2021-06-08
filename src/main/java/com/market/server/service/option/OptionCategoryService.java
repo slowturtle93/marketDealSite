@@ -15,4 +15,5 @@ public interface OptionCategoryService {
 	
 	public void DeleteOpCategory(List<OptionCategoryDTO> optionCategoryList);
 	
+	public boolean isDuplicatedNm(String categoryNm);
 }

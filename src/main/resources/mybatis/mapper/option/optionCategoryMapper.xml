@@ -30,6 +30,13 @@
 		 ORDER BY REG_DTTM DESC
 	</select>
 	
+	<select id="isDuplicatedNm" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		  FROM TBL_OPTION_CATEGORY
+		 WHERE OP_CATEGORY_NM = #{opCategoryNm}
+		   AND DEL_YN         = 'N'
+	</select>
+	
 	<insert id="InsertOpCategory" parameterType="java.util.List">
 	    <selectKey keyProperty="opCategorySeq" resultType="int" order="BEFORE">
     	SELECT IFNULL(MAX(OP_CATEGORY_SEQ), 0) + 1 FROM TBL_OPTION_CATEGORY
