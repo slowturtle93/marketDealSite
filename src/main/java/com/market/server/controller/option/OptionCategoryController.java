@@ -30,7 +30,7 @@ import lombok.extern.log4j.Log4j2;
 
 
 @RestController
-@RequestMapping("/optionCategory/")
+@RequestMapping("/option/category/")
 @Log4j2
 public class OptionCategoryController {
 	
@@ -48,15 +48,15 @@ public class OptionCategoryController {
 	 */
 	@GetMapping("select")
 	@LoginCheck(type = UserType.ADMIN)
-	public List<OptionCategoryDTO> getOpCategory(@RequestBody OptionCategoryResponse optionCategoryResponse){
+	public List<OptionCategoryDTO> getOpCategory(@RequestBody OptionCategoryReqeust optionCategoryReqeust){
 		Search search = new Search();
 		
-		search.add("delYn"      , optionCategoryResponse.getDelYn());  // 삭제여부
-		search.add("dispYn"     , optionCategoryResponse.getDispYn()); // 전시여부
+		search.add("delYn"  , optionCategoryReqeust.getDelYn());  // 삭제여부
+		search.add("dispYn" , optionCategoryReqeust.getDispYn()); // 전시여부d
 		
-		search.add("pg"  , optionCategoryResponse.getPg());   // 현재페이제
-		search.add("pgSz", optionCategoryResponse.getPgSz()); // 한 페이지당 Row 수
-		search.setRow();                                      // 페이지 계산
+		search.add("pg"  , optionCategoryReqeust.getPg());   // 현재페이제
+		search.add("pgSz", optionCategoryReqeust.getPgSz()); // 한 페이지당 Row 수
+		search.setRow();                                     // 페이지 계산
 		
 		return optionCategoryService.getOpCategory(search);
 	}
@@ -64,8 +64,8 @@ public class OptionCategoryController {
 	/**
 	 * 옵션 카테고리를 등록한다.
 	 * 
-	 * @param OpCategoryRequest
-	 * @return
+	 * @param List<OptionCategoryDTO>
+	 * @return HttpStatus
 	 */
 	@PostMapping("insert")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -79,7 +79,7 @@ public class OptionCategoryController {
 	/**
 	 * 옵션 카테고리를 수정한다.
 	 * 
-	 * @param optionCategoryDTO
+	 * @param List<OptionCategoryDTO>
 	 */
 	@PatchMapping("update")
 	@LoginCheck(type = UserType.ADMIN)
@@ -92,7 +92,7 @@ public class OptionCategoryController {
 	/**
 	 * 옵션 카테고리를 삭제한다.
 	 * 
-	 * @param optionCategoryDTO
+	 * @param List<OptionCategoryDTO>
 	 */
 	@DeleteMapping("delete")
 	@LoginCheck(type = UserType.ADMIN)
@@ -101,11 +101,11 @@ public class OptionCategoryController {
 		optionCategoryService.DeleteOpCategory(opCategoryList);
 	}
 	
-	/*======================= response 객체 ======================= */
+	/*======================= reqeust 객체 ======================= */
 	
 	@Getter
 	@Setter
-	private static class OptionCategoryResponse {
+	private static class OptionCategoryReqeust {
 		private String delYn;
 		private String dispYn;
 		@NonNull

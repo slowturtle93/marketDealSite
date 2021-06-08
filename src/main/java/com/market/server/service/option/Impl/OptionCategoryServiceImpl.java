@@ -17,42 +17,48 @@ import lombok.extern.log4j.Log4j2;
 public class OptionCategoryServiceImpl implements OptionCategoryService{
 	
 	@Autowired
-	private final OptionCategoryMapper optionMapper;
+	private final OptionCategoryMapper optionCategoryMapper;
 	
-	public OptionCategoryServiceImpl(OptionCategoryMapper optionMapper) {
-        this.optionMapper = optionMapper;
+	public OptionCategoryServiceImpl(OptionCategoryMapper optionCategoryMapper) {
+        this.optionCategoryMapper = optionCategoryMapper;
     }
 	
 	@Override
 	public List<OptionCategoryDTO> getOpCategory(Search search) {
-		return optionMapper.getOpCategory(search);
+		return optionCategoryMapper.getOpCategory(search);
 	}
 
 	@Override
 	public int InsertOpCategory(List<OptionCategoryDTO> optionCategoryList) {
-		// 옵션 카테고리 등록 시 필수 입력 NULL 체크
+		
 		for(OptionCategoryDTO optionCategory : optionCategoryList) {
-			if(OptionCategoryDTO.hasNullDataBeforeRegister(optionCategory)) {
-				log.error("Insert ERROR! {}", optionCategory);
+			if(OptionCategoryDTO.hasNullDataBeforeRegister(optionCategory)) { // 옵션 카테고리 등록 시 필수 입력 NULL 체크
+				log.error("Insert ERROR! {}", optionCategory.getOpCategoryNm());
 				throw new RuntimeException("Insert ERROR! 옵션 카테고리 이름을 확인해주세요.\n" + "opCategoryNm : " + optionCategory.getOpCategoryNm());
+			}else if(isDuplicatedNm(optionCategory.getOpCategoryNm())) { // 옵션 카테고리명 중복여부 확인
+				log.error("Insert ERROR! {}", optionCategory.getOpCategoryNm());
+				throw new RuntimeException("Insert ERROR! 상품 카테고리 이름이 이미 존재합니다.\n" + "ctegoryNm : " + optionCategory.getOpCategoryNm());
 			}
 		}
 		
-		return optionMapper.InsertOpCategory(optionCategoryList);
+		return optionCategoryMapper.InsertOpCategory(optionCategoryList);
 	}
 
 	@Override
 	public void UpdateOpCategory(List<OptionCategoryDTO> optionCategoryList) {
-		// 옵션 카테고리 수정 시 필수 입력 NULL 체크
-		for(OptionCategoryDTO optionCategory : optionCategoryList) {
+		
+		for(OptionCategoryDTO optionCategory : optionCategoryList) { // 옵션 카테고리 수정 시 필수 입력 NULL 체크
 			if(OptionCategoryDTO.hasNullDataBeforeRegister(optionCategory)) {
-				log.error("Insert ERROR! {}", optionCategory);
+				log.error("Update ERROR! {}", optionCategory);
 				throw new RuntimeException("Update ERROR! 옵션 카테고리 이름을 확인해주세요.\n" + "opCategoryNm : " + optionCategory.getOpCategoryNm());
+			}else if(isDuplicatedNm(optionCategory.getOpCategoryNm())) { // 옵션 카테고리명 중복여부 확인
+				log.error("Update ERROR! {}", optionCategory.getOpCategoryNm());
+				throw new RuntimeException("Update ERROR! 상품 카테고리 이름이 이미 존재합니다.\n" + "ctegoryNm : " + optionCategory.getOpCategoryNm());
 			}
 		}
 		
 		// 옵션 카테고리 수정
-		int result = optionMapper.UpdateOpCategory(optionCategoryList);
+		int result = optionCategoryMapper.UpdateOpCategory(optionCategoryList);
 		
 		if(result < 1) {
 			log.error("update OptionCategory error! {}", optionCategoryList);
@@ -62,12 +68,21 @@ public class OptionCategoryServiceImpl implements OptionCategoryService{
 
 	@Override
 	public void DeleteOpCategory(List<OptionCategoryDTO> optionCategoryList) {
-		int result = optionMapper.DeleteOpCategory(optionCategoryList);
+		int result = optionCategoryMapper.DeleteOpCategory(optionCategoryList);
 		
 		if(result < 1) {
 			log.error("delete OptionCategory error! {}", optionCategoryList);
 		    throw new RuntimeException("delete OptionCategory error!");
 		}
+	}
+	
+	/**
+	 * 상품 카테고리 명 중복 여부 확인
+	 */
+	@Override
+	public boolean isDuplicatedNm(String categoryNm) {
+		int result = optionCategoryMapper.isDuplicatedNm(categoryNm);
+		return result == 1 ? true : false;
 	}
 
 }

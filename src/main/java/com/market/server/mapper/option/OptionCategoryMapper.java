@@ -18,4 +18,6 @@ public interface OptionCategoryMapper {
 	public int UpdateOpCategory(@Param("optionCategoryList") List<OptionCategoryDTO> optionCategoryList);
 	
 	public int DeleteOpCategory(@Param("optionCategoryList") List<OptionCategoryDTO> optionCategoryList);
+	
+	public int isDuplicatedNm(@Param("opCategoryNm") String opCategoryNm);
 }
