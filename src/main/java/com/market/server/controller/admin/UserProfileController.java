@@ -44,18 +44,18 @@ public class UserProfileController {
 	 */
 	@GetMapping("userProfile")
 	@LoginCheck(type = UserType.ADMIN)
-	public List<UserDTO> getUserProfile(@RequestBody UserProfileResponse userProfileResponse){
+	public List<UserDTO> getUserProfile(@RequestBody UserProfileRequest userProfileRequest){
 		Search search = new Search();
 		// 조회조건
-		search.add("loginId",     userProfileResponse.getLoginId());     // 로그인아이디
-		search.add("status",      userProfileResponse.getStatus());      // 상태
-		search.add("userLevel",   userProfileResponse.getUserLevel());   // 회원등급
-		search.add("fromRegDttm", userProfileResponse.getFromRegDttm()); // 시작일자
-		search.add("toRegDttm",   userProfileResponse.getToRegDttm());   // 종료일자
+		search.add("loginId",     userProfileRequest.getLoginId());     // 로그인아이디
+		search.add("status",      userProfileRequest.getStatus());      // 상태
+		search.add("userLevel",   userProfileRequest.getUserLevel());   // 회원등급
+		search.add("fromRegDttm", userProfileRequest.getFromRegDttm()); // 시작일자
+		search.add("toRegDttm",   userProfileRequest.getToRegDttm());   // 종료일자
 		
 		//페이지
-		search.add("pg",          userProfileResponse.getPg());   // 현재페이제
-		search.add("pgSz",        userProfileResponse.getPgSz()); // 한 페이지당 Row 수
+		search.add("pg",          userProfileRequest.getPg());   // 현재페이제
+		search.add("pgSz",        userProfileRequest.getPgSz()); // 한 페이지당 Row 수
 		search.setRow();                                          // 페이지 계산
 		
 		List<UserDTO> userInfo = userProfileService.getUserProfile(search);
@@ -65,15 +65,11 @@ public class UserProfileController {
 	}
 	
 	
-	/*======================= response 객체 ======================= */
-	
-	 
-	
-	/*======================= response 객체 ======================= */
+	/*======================= request 객체 ======================= */
 	
 	@Getter
 	@Setter
-	private static class UserProfileResponse {
+	private static class UserProfileRequest {
 		private String loginId;
 		private String status;
 		private String userLevel;
