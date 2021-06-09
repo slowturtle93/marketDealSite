@@ -6,14 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.market.server.dto.Search;
-import com.market.server.dto.product.ProductCategoryDTO;
-import com.market.server.dto.product.ProductDTO;
 import com.market.server.dto.product.ProductDivisionDTO;
-import com.market.server.mapper.product.ProductCategoryMapper;
 import com.market.server.mapper.product.ProductDivisionMapper;
-import com.market.server.mapper.product.ProductMapper;
 import com.market.server.service.product.ProductDivisionService;
-import com.market.server.service.product.ProductService;
 
 import lombok.extern.log4j.Log4j2;
 

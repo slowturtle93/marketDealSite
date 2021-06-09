@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.market.server.aop.LoginCheck;
 import com.market.server.aop.LoginCheck.UserType;
 import com.market.server.dto.Search;
-import com.market.server.dto.product.ProductCategoryDTO;
 import com.market.server.dto.product.ProductDivisionDTO;
 import com.market.server.service.product.Impl.ProductDivisionServiceImpl;
 
@@ -71,7 +70,7 @@ private final ProductDivisionServiceImpl productDivisionService;
 	@ResponseStatus(HttpStatus.CREATED)
 	@LoginCheck(type = UserType.ADMIN)
 	public HttpStatus InsertDivision(@RequestBody @NotNull List<ProductDivisionDTO> divisionList){
-		// 상품 카테고리 등록
+		// 상품 구분정보 등록
 		productDivisionService.InsertDivision(divisionList);
 		return HttpStatus.CREATED;
 	}
@@ -84,7 +83,7 @@ private final ProductDivisionServiceImpl productDivisionService;
 	@PatchMapping("update")
 	@LoginCheck(type = UserType.ADMIN)
 	public void UpdateDivision(@RequestBody @NotNull List<ProductDivisionDTO> divisionList){
-		// 상품 카테고리 수정
+		// 상품 구분정보 수정
 		productDivisionService.UpdateDivision(divisionList);
 	}
 	
@@ -97,7 +96,7 @@ private final ProductDivisionServiceImpl productDivisionService;
 	@DeleteMapping("delete")
 	@LoginCheck(type = UserType.ADMIN)
 	public void DeleteDivision( @RequestBody @NotNull List<ProductDivisionDTO> divisionList){
-		// 상품 카테고리 삭제
+		// 상품 구분정보 삭제
 		productDivisionService.DeleteDivision(divisionList);
 	}
 	
