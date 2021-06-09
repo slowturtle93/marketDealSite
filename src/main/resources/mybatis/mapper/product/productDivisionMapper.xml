@@ -8,6 +8,7 @@
         <result property="divisionNm" column="division_nm"/>
         <result property="delYn"      column="del_yn"/>
         <result property="dispYn"     column="disp_yn"/>
+        <result property="directYn"   column="direct_yn"/>
         <result property="regDttm"    column="reg_dttm"/>
         <result property="updDttm"    column="upd_dttm"/>
 	</resultMap>
@@ -17,15 +18,19 @@
 		     , DIVISION_NM /* 상품구분명 */
 		     , DEL_YN      /* 삭제여부 */
 		     , DISP_YN     /* 전시여부 */ 
+		     , DIRECT_YN   /* 직거래가능여부 */
 		     , REG_DTTM    /* 등록일시 */
 		     , UPD_DTTM    /* 수정일시 */
 		  FROM TBL_PRODUCT_DIVISION
 		 WHERE 1=1
 		   <if test="delYn != null and delYn != ''">
-		   AND DEL_YN  = #{delYn}
+		   AND DEL_YN    = #{delYn}
 		   </if>
 		   <if test="dispYn != null and dispYn != ''">
-		   AND DISP_YN = #{dispYn}
+		   AND DISP_YN   = #{dispYn}
+		   </if>
+		   <if test="directYn != null and directYn != ''">
+		   AND DIRECT_YN = #{directYn}
 		   </if>
 		 ORDER BY REG_DTTM DESC
 		 <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
@@ -50,6 +55,7 @@
 		      DIVISION_SEQ /* 상품구분정보시퀀스 */
 		    , DIVISION_CD  /* 상품구분코드 */
 		    , DIVISION_NM  /* 상품구분명 */
+		    , DIRECT_YN    /* 직거래가능여부 */
 		    , DEL_YN       /* 삭제여부 */
 		    , DISP_YN      /* 전시여부 */
 		    , REG_DTTM     /* 등록일시 */
@@ -61,6 +67,7 @@
 		      (#{divisionSeq} + #{index})
 			, (SELECT CONCAT('PD', LPAD((#{divisionSeq} + #{index}), 3, '0')) FROM DUAL)
 			, #{division.divisionNm}
+			, #{division.directYn}
 			, 'N'
 			, 'Y'
 			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
@@ -73,6 +80,7 @@
 		<foreach item ="division" collection="divisionList" index="index" open="" separator=";" close="">
 		UPDATE TBL_PRODUCT_DIVISION
 		   SET OP_CATEGORY_NM = #{division.divisionNm}                  /* 상품구분명 */
+		     , DIRECT_YN      = #{division.directYn}                    /* 직거래가능여부 */
 		     , DISP_YN        = #{division.dispYn}                      /* 전시여부 */
 		     , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
 		 WHERE OP_CATEGORY_CD = #{division.divisionCd}                  /* 상품구분코드 */

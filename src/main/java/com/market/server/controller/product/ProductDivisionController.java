@@ -49,8 +49,9 @@ private final ProductDivisionServiceImpl productDivisionService;
 	public List<ProductDivisionDTO> getDivision(@RequestBody DivisionRequest divisionRequest){
 		Search search = new Search();
 		
-		search.add("delYn"  , divisionRequest.getDelYn());  // 삭제여부
-		search.add("dispYn" , divisionRequest.getDispYn()); // 전시여부
+		search.add("delYn"   , divisionRequest.getDelYn());    // 삭제여부
+		search.add("dispYn"  , divisionRequest.getDispYn());   // 전시여부
+		search.add("directYn", divisionRequest.getDirectYn()); // 직거래가능여부
 		
 		search.add("pg"  , divisionRequest.getPg());   // 현재페이제
 		search.add("pgSz", divisionRequest.getPgSz()); // 한 페이지당 Row 수
@@ -107,6 +108,7 @@ private final ProductDivisionServiceImpl productDivisionService;
 	private static class DivisionRequest {
 		private String delYn;
 		private String dispYn;
+		private String directYn;
 		private int pg;
 		private int pgSz;
 	}
