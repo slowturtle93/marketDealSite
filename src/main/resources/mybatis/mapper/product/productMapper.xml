@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.product.ProductMapper">
+
+	<select id="findByItemCd" resultType="String">
+		SELECT ITEM_CD     /* 상품코드 */
+		  FROM TBL_PRODUCT /* 상품정보 */
+		 WHERE ITEM_SEQ = #{itemSeq}
+	</select>
+
+	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDTO">
+		<selectKey keyProperty="itemSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(ITEM_SEQ), 0) + 1 FROM TBL_PRODUCT
+    	</selectKey>
+    	
+		INSERT INTO TBL_PRODUCT(
+			  ITEM_SEQ       /* 상품시퀀스 */
+			, ITEM_CD        /* 상품코드 */
+			, LOGIN_NO       /* 로그인번호 */
+			, ITEM_NM        /* 상품명 */
+			, ITEM_PRICE     /* 상품가격 */
+			, VIEW_CNT       /* 조회수 */
+			, LIKE_CNT       /* 좋아요수 */
+			, CATEGORY_CD    /* 상품카테고리코드 */
+			, DISP_YN        /* 전시여부 */
+			, DEL_YN         /* 삭제여부 */
+			, IMAGE1         /* 이미지1 */
+			, IMAGE2         /* 이미지2 */
+			, IMAGE3         /* 이미지3 */
+			, IMAGE4         /* 이미지4 */
+			, DESCRIPTION    /* 상품설명 */ 
+			, DELIVERY_PRICE /* 배송가격 */
+			, TITLE          /* 제목 */
+			, DIVISION_CD    /* 상품구분코드 */
+			, STATUS         /* 상태 */
+			, REG_DTTM       /* 등록일시 */
+			, UPD_DTTM       /* 수정일시 */
+		)VALUES(
+			  #{itemSeq}
+			, (SELECT CONCAT('IE', LPAD(#{itemSeq}, 7, '0')) FROM DUAL)
+			, #{loginNo}
+			, #{itemNm}
+			, #{itemPrice}
+			, 0
+			, 0
+			, #{categoryCd}
+			, 'Y'
+			, 'N'
+			, #{image1}
+			, #{image2}
+			, #{image3}
+			, #{image4}
+			, #{description}
+			, #{deliveryPrice}
+			, #{title}
+			, #{divisionCd}
+			, 'DEFAULT'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+	</insert>
+</mapper>
