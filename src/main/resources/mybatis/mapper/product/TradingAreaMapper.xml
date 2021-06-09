@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.product.TradingAreaMapper">
+
+	<insert id="InsertTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
+		INSERT INTO TBL_TRADING_AREA(
+			  ITEM_CD /* 상품코드 */
+			, AREA1   /* 거래가능지역1 */
+			, AREA2   /* 거래가능지역2 */
+			, AREA3   /* 거래가능지역3 */
+		)VALUES(
+			  #{itemCd}
+			, #{area1}
+			, #{area2}
+			, #{area3}
+		)
+	</insert>
+</mapper>
