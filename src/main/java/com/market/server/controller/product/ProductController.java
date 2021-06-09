@@ -43,10 +43,11 @@ public class ProductController {
 	@PostMapping("insert")
 	@ResponseStatus(HttpStatus.CREATED)
 	@LoginCheck(type = UserType.USER)
-	public void insertProduct(HttpSession session, @RequestBody ProductDTO productDTO) {
+	public HttpStatus insertProduct(HttpSession session, @RequestBody ProductDTO productDTO) {
 		productDTO.setLoginNo(SessionUtil.getLoginUserNo(session));
 		productService.insertProduct(productDTO);
 		
+		return HttpStatus.CREATED;
 	}
 	
 }
