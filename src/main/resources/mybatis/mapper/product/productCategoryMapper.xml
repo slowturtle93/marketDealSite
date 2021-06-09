@@ -13,13 +13,13 @@
 	</resultMap>
 
 	<select id="getCategory" resultType="productCategoryDTO">
-		SELECT CATEGORY_CD /* 상품카테고리코드 */
-		     , CATEGORY_NM /* 상품카테고리명 */
-		     , DEL_YN      /* 삭제여부 */
-		     , DISP_YN     /* 전시여부 */ 
-		     , REG_DTTM    /* 등록일시 */
-		     , UPD_DTTM    /* 수정일시 */
-		  FROM TBL_PRODUCT_CATEGORY
+		SELECT CATEGORY_CD          /* 상품카테고리코드 */
+		     , CATEGORY_NM          /* 상품카테고리명 */
+		     , DEL_YN               /* 삭제여부 */
+		     , DISP_YN              /* 전시여부 */ 
+		     , REG_DTTM             /* 등록일시 */
+		     , UPD_DTTM             /* 수정일시 */
+		  FROM TBL_PRODUCT_CATEGORY /* 상품카테고리 */
 		 WHERE 1=1
 		   <if test="delYn != null and delYn != ''">
 		   AND DEL_YN  = #{delYn}
@@ -39,7 +39,7 @@
 	
 	<select id="isDuplicatedNm" parameterType="String" resultType="int">
 		SELECT COUNT(*)
-		  FROM TBL_PRODUCT_CATEGORY
+		  FROM TBL_PRODUCT_CATEGORY /* 상품카테고리 */
 		 WHERE CATEGORY_NM = #{categoryNm}
 		   AND DEL_YN = 'N'
 	</select>
@@ -74,7 +74,7 @@
 	
 	<update id="UpdateCategory" parameterType="java.util.List">
 		<foreach item ="category" collection="categoryList" index="index" open="" separator=";" close="">
-		UPDATE TBL_PRODUCT_CATEGORY
+		UPDATE TBL_PRODUCT_CATEGORY                                     /* 상품카테고리 */
 		   SET OP_CATEGORY_NM = #{category.categoryNm}                  /* 상품카테고리명 */
 		     , DISP_YN        = #{category.dispYn}                      /* 전시여부 */
 		     , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
@@ -83,7 +83,7 @@
 	</update>
 	
 	<update id="DeleteCategory" parameterType="java.util.List">
-		UPDATE TBL_PRODUCT_CATEGORY
+		UPDATE TBL_PRODUCT_CATEGORY                               /* 상품카테고리 */
 		   SET DEL_YN   = 'Y'                                     /* 삭제여부 */
 		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
 		 WHERE 1=1

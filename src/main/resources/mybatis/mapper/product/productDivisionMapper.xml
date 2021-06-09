@@ -14,14 +14,14 @@
 	</resultMap>
 
 	<select id="getDivision" resultType="productDivisionDTO">
-		SELECT DIVISION_CD /* 상품구분코드 */
-		     , DIVISION_NM /* 상품구분명 */
-		     , DEL_YN      /* 삭제여부 */
-		     , DISP_YN     /* 전시여부 */ 
-		     , DIRECT_YN   /* 직거래가능여부 */
-		     , REG_DTTM    /* 등록일시 */
-		     , UPD_DTTM    /* 수정일시 */
-		  FROM TBL_PRODUCT_DIVISION
+		SELECT DIVISION_CD          /* 상품구분코드 */
+		     , DIVISION_NM          /* 상품구분명 */
+		     , DEL_YN               /* 삭제여부 */
+		     , DISP_YN              /* 전시여부 */ 
+		     , DIRECT_YN            /* 직거래가능여부 */
+		     , REG_DTTM             /* 등록일시 */
+		     , UPD_DTTM             /* 수정일시 */
+		  FROM TBL_PRODUCT_DIVISION /* 상품구분정보 */
 		 WHERE 1=1
 		   <if test="delYn != null and delYn != ''">
 		   AND DEL_YN    = #{delYn}
@@ -44,7 +44,7 @@
 	
 	<select id="isDuplicatedNm" parameterType="String" resultType="int">
 		SELECT COUNT(*)
-		  FROM TBL_PRODUCT_DIVISION
+		  FROM TBL_PRODUCT_DIVISION /* 상품구분정보 */
 		 WHERE DIVISION_NM = #{divisionNm}
 		   AND DEL_YN = 'N'
 	</select>
@@ -81,7 +81,7 @@
 	
 	<update id="UpdateDivision" parameterType="java.util.List">
 		<foreach item ="division" collection="divisionList" index="index" open="" separator=";" close="">
-		UPDATE TBL_PRODUCT_DIVISION
+		UPDATE TBL_PRODUCT_DIVISION                                     /* 상품구분정보 */
 		   SET OP_CATEGORY_NM = #{division.divisionNm}                  /* 상품구분명 */
 		     , DIRECT_YN      = #{division.directYn}                    /* 직거래가능여부 */
 		     , DISP_YN        = #{division.dispYn}                      /* 전시여부 */
@@ -91,7 +91,7 @@
 	</update>
 	
 	<update id="DeleteDivision" parameterType="java.util.List">
-		UPDATE TBL_PRODUCT_DIVISION
+		UPDATE TBL_PRODUCT_DIVISION                               /* 상품구분정보 */
 		   SET DEL_YN   = 'Y'                                     /* 삭제여부 */
 		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
 		 WHERE 1=1
