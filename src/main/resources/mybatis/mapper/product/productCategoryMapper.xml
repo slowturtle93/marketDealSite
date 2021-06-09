@@ -27,6 +27,9 @@
 		   <if test="dispYn != null and dispYn != ''">
 		   AND DISP_YN = #{dispYn}
 		   </if>
+		   <if test="categoryCd != null and categoryCd != ''">
+		   AND CATEGORY_CD = #{categoryCd}
+		   </if>
 		 ORDER BY REG_DTTM DESC
 		 <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
 		 LIMIT #{strtRow}, #{endRow}

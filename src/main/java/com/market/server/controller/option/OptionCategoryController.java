@@ -50,8 +50,9 @@ public class OptionCategoryController {
 	public List<OptionCategoryDTO> getOpCategory(@RequestBody OptionCategoryReqeust optionCategoryReqeust){
 		Search search = new Search();
 		
-		search.add("delYn"  , optionCategoryReqeust.getDelYn());  // 삭제여부
-		search.add("dispYn" , optionCategoryReqeust.getDispYn()); // 전시여부d
+		search.add("delYn" , optionCategoryReqeust.getDelYn());              // 삭제여부
+		search.add("dispYn", optionCategoryReqeust.getDispYn());             // 전시여부
+		search.add("opCategoryCd", optionCategoryReqeust.getOpCategoryCd()); // 옵션카테고리코드
 		
 		search.add("pg"  , optionCategoryReqeust.getPg());   // 현재페이제
 		search.add("pgSz", optionCategoryReqeust.getPgSz()); // 한 페이지당 Row 수
@@ -107,6 +108,7 @@ public class OptionCategoryController {
 	private static class OptionCategoryReqeust {
 		private String delYn;
 		private String dispYn;
+		private String opCategoryCd;
 		private int pg;
 		private int pgSz;
 	}

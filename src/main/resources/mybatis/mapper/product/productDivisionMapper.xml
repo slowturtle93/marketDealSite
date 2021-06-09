@@ -32,6 +32,9 @@
 		   <if test="directYn != null and directYn != ''">
 		   AND DIRECT_YN = #{directYn}
 		   </if>
+		   <if test="divisionCd != null and divisionCd != ''">
+		   AND DIVISION_CD = #{divisionCd}
+		   </if>
 		 ORDER BY REG_DTTM DESC
 		 <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
 		 LIMIT #{strtRow}, #{endRow}
