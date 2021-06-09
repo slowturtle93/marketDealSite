@@ -47,7 +47,6 @@ public class OptionCategoryController {
 	 * @return
 	 */
 	@GetMapping("select")
-	@LoginCheck(type = UserType.ADMIN)
 	public List<OptionCategoryDTO> getOpCategory(@RequestBody OptionCategoryReqeust optionCategoryReqeust){
 		Search search = new Search();
 		
