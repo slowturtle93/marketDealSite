@@ -28,6 +28,9 @@
 		   AND DISP_YN = #{dispYn}
 		   </if>
 		 ORDER BY REG_DTTM DESC
+		 <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
+		 LIMIT #{strtRow}, #{endRow}
+		 </if>
 	</select>
 	
 	<select id="isDuplicatedNm" parameterType="String" resultType="int">

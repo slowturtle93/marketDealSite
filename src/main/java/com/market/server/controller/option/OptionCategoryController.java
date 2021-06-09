@@ -107,9 +107,7 @@ public class OptionCategoryController {
 	private static class OptionCategoryReqeust {
 		private String delYn;
 		private String dispYn;
-		@NonNull
 		private int pg;
-		@NonNull
 		private int pgSz;
 	}
 	

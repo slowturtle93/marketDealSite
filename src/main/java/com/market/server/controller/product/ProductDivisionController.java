@@ -46,7 +46,6 @@ private final ProductDivisionServiceImpl productDivisionService;
 	 * @return
 	 */
 	@GetMapping("select")
-	@LoginCheck(type = UserType.ADMIN)
 	public List<ProductDivisionDTO> getDivision(@RequestBody DivisionRequest divisionRequest){
 		Search search = new Search();
 		
@@ -108,9 +107,7 @@ private final ProductDivisionServiceImpl productDivisionService;
 	private static class DivisionRequest {
 		private String delYn;
 		private String dispYn;
-		@NonNull
 		private int pg;
-		@NonNull
 		private int pgSz;
 	}
 	

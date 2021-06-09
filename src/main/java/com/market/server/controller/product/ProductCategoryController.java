@@ -46,7 +46,6 @@ public class ProductCategoryController {
 	 * @return
 	 */
 	@GetMapping("select")
-	@LoginCheck(type = UserType.ADMIN)
 	public List<ProductCategoryDTO> getCategory(@RequestBody CategoryRequest categoryRequest){
 		Search search = new Search();
 		
@@ -108,9 +107,7 @@ public class ProductCategoryController {
 	private static class CategoryRequest {
 		private String delYn;
 		private String dispYn;
-		@NonNull
 		private int pg;
-		@NonNull
 		private int pgSz;
 	}
 	
