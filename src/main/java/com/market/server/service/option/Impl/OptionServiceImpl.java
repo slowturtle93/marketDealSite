@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.market.server.dto.Search;
 import com.market.server.dto.option.OptionDTO;
 import com.market.server.mapper.option.OptionMapper;
 import com.market.server.service.option.OptionService;
@@ -17,6 +18,14 @@ public class OptionServiceImpl implements OptionService{
 	
 	@Autowired
 	private OptionMapper optionMapper;
+	
+	/**
+	 * 상품 옵션을 조회한다.
+	 */
+	@Override
+	public List<OptionDTO> getOption(Search search) {
+		return optionMapper.getOption(search);
+	}
 	
 	/**
 	 * 상품 옵션을 등록한다.

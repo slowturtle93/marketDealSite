@@ -13,6 +13,8 @@ public interface ProductMapper {
 	
 	public List<ProductDTO> myProductInfo(Search search);
 	
+	public ProductDTO myProductDetail(Search search);
+	
 	public int InsertProduct(ProductDTO productDTO);
 	
 	public String findByItemCd(@Param("itemSeq") int itemSeq);

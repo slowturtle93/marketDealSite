@@ -10,5 +10,7 @@ public interface ProductService {
 	
 	public List<ProductDTO> myProductInfo(Search search);
 	
+	public ProductDetailDTO myProductDetail(Search search);
+	
 	public void insertProduct(ProductDetailDTO productDetailDTO);
 }

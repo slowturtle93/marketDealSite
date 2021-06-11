@@ -14,6 +14,7 @@ public class OptionDTO {
 	private String optionNm;     // 옵션명
 	private String itemCd;       // 상품코드
 	private String opCategoryCd; // 옵션카테고리코드
+	private String opCategoryNm;  // 옵션카테고리명
 	private String delYn;        // 삭제여부
 	private String dispYn;       // 노출여부
 	private String regDttm;      // 등록일시

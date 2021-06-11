@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +52,7 @@ public class ProductController {
 	 * @return
 	 */
 	@GetMapping("myProducts")
+	@LoginCheck(type = UserType.USER)
 	public ResponseEntity<ProductsResponse> myProductInfo(HttpSession session, @RequestBody ProductRequest productRequest){
 		
 		Search search = new Search();
@@ -79,7 +81,25 @@ public class ProductController {
 		return new ResponseEntity<ProductsResponse>(productsResponse, HttpStatus.OK);
 	}
 	
-	// 본인이 등록한 상품 상세 조회
+	/**
+	 * 본인이 등록한 특정 상품의 상세 정보를 조회한다.
+	 * 
+	 * @param itemCd
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("myProducts/{itemCd}/detail")
+	@LoginCheck(type = UserType.USER)
+	public ResponseEntity<ProductDetailDTO> myProductDetail(@PathVariable("itemCd") String itemCd, HttpSession session){
+		
+		Search search = new Search();
+		search.add("loginNo", SessionUtil.getLoginUserNo(session)); // 로그인번호
+		search.add("itemCd", itemCd); // 상품코드
+		
+		ProductDetailDTO productDetailDTO = productService.myProductDetail(search);
+		
+		return new ResponseEntity<ProductDetailDTO>(productDetailDTO, HttpStatus.OK);
+	}
 	
 	
 	/**
@@ -105,14 +125,6 @@ public class ProductController {
     @AllArgsConstructor
     private static class ProductsResponse {
         private List<ProductDTO> productDTO;
-    }
-	
-	@Getter
-    @AllArgsConstructor
-    private static class ProductDetailResponse {
-        private List<ProductDTO> productDTO;
-        private List<OptionDTO> optionDTO;
-        private TradingAreaDTO tradingAreaDTO; 
     }
 	
 	// -------------- request 객체 --------------

@@ -2,7 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.market.server.mapper.product.TradingAreaMapper">
-
+	
+	<resultMap id="tradingAreaDTO" type="com.market.server.dto.product.TradingAreaDTO">
+		<result property="itemCd" column="item_cd"/>
+		<result property="area1"  column="area1"/>
+		<result property="area2"  column="area2"/>
+		<result property="area3"  column="area3"/>
+	</resultMap>
+	
+	<select id="getTradingArea" resultType="tradingAreaDTO">
+		SELECT ITEM_CD
+		     , AREA1
+		     , AREA2
+		     , AREA3
+		  FROM TBL_TRADING_AREA
+		 WHERE ITEM_CD = #{itemCd}
+	</select>
+	
 	<insert id="InsertTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
 		INSERT INTO TBL_TRADING_AREA(
 			  ITEM_CD /* 상품코드 */

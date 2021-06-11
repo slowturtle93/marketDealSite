@@ -8,11 +8,34 @@
 		<result property="optionNm"     column="option_nm"/>
 		<result property="itemCd"       column="item_cd"/>
 		<result property="opCategoryCd" column="op_category_cd"/>
+		<result property="opCategoryNm" column="op_category_nm"/>
 		<result property="delYn"        column="del_yn"/>
 		<result property="dispYn"       column="disp_yn"/>
 		<result property="regDttm"      column="reg_dttm"/>
 		<result property="updDttm"      column="upd_dttm"/> 
 	</resultMap>
+	
+	<select id="getOption" resultType="optionDTO">
+	    SELECT T1.OPTION_CD
+	         , T1.OPTION_NM
+	         , T1.ITEM_CD
+	         , T1.OP_CATEGORY_CD
+	         , T2.OP_CATEGORY_NM
+	         , T1.DEL_YN
+	         , T1.DISP_YN
+	         , T1.REG_DTTM
+	         , T1.UPD_DTTM
+	      FROM TBL_OPTION T1
+	      LEFT OUTER JOIN
+	           TBL_OPTION_CATEGORY T2
+	        ON T1.OP_CATEGORY_CD = T2.OP_CATEGORY_CD
+	     WHERE 1=1
+	       <if test="itemCd != null and itemCd != ''">
+	       AND T1.ITEM_CD = #{itemCd}
+	       </if>
+	       AND T2.DEL_YN  = 'N'
+	       AND T2.DISP_YN = 'Y'
+	</select>
 
 	<insert id="InsertOption" parameterType="java.util.List">
 	    <selectKey keyProperty="optionSeq" resultType="int" order="BEFORE">

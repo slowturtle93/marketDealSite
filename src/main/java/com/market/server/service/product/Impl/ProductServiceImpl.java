@@ -42,6 +42,20 @@ public class ProductServiceImpl implements ProductService{
 		return productMapper.myProductInfo(search);
 	}
 	
+	/**
+	 * 상품 상세 정보를 조회한다.
+	 */
+	@Override
+	public ProductDetailDTO myProductDetail(Search search) {
+		ProductDetailDTO productDetailDTO = new ProductDetailDTO();
+		
+		productDetailDTO.setProductDTO(productMapper.myProductDetail(search));         // 상품 정보 set
+		productDetailDTO.setOptionList(optionService.getOption(search));               // 상품 옵션정보 set
+		productDetailDTO.setTradingAreaDTO(tradingAreaService.getTradingArea(search)); // 상품 거래정보 set
+		
+		return productDetailDTO;
+	}
+	
 	
 	/**
 	 * 상품 정보를 등록한다.
@@ -93,5 +107,5 @@ public class ProductServiceImpl implements ProductService{
 		    throw new RuntimeException("Insert Product Error");
 		}
 	}
-	
+
 }
