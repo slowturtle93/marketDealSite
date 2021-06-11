@@ -31,6 +31,17 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired 
 	private ProductDivisionServiceImpl productDivisionService;
 	
+	
+	
+	/**
+	 * 본인이 등록한 상품을 조회한다.
+	 */
+	@Override
+	public List<ProductDTO> myProductInfo(Search search) {
+		return productMapper.myProductInfo(search);
+	}
+	
+	
 	/**
 	 * 상품 정보를 등록한다.
 	 */

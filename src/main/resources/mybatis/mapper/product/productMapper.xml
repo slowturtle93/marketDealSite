@@ -3,6 +3,98 @@
 
 <mapper namespace="com.market.server.mapper.product.ProductMapper">
 
+	<resultMap id="productDTO" type="com.market.server.dto.product.ProductDTO">
+		<result property="itemCd "       column="item_cd"/> 
+        <result property="loginNo"       column="login_no"/>
+        <result property="itemNm"        column="item_nm"/>
+        <result property="itemPrice"     column="item_price"/>
+        <result property="viewCnt"       column="view_cnt"/>
+        <result property="likeCnt"       column="like_cnt"/>
+        <result property="categoryCd"    column="category_cd"/>
+        <result property="dispYn"        column="disp_yn"/>
+        <result property="delYn"         column="del_yn"/>
+        <result property="image1"        column="image1"/>
+        <result property="image2"        column="image2"/>
+        <result property="image3"        column="image3"/>
+        <result property="image4"        column="image4"/>
+        <result property="description"   column="description"/>
+        <result property="deliveryPrice" column="delivery_price"/>
+        <result property="title"         column="title"/>
+        <result property="divisionCd"    column="division_cd"/>
+        <result property="status"        column="status"/>
+        <result property="regDttm"       column="reg_dttm"/>
+        <result property="updDttm"       column="upd_dttm"/>
+	</resultMap>
+	
+	<select id="myProductInfo" resultType="productDTO">
+		SELECT ITEM_CD        /* 상품코드 */
+             , ITEM_NM        /* 상품명 */
+             , ITEM_PRICE     /* 상품가격 */
+             , VIEW_CNT       /* 조회수 */
+             , LIKE_CNT       /* 좋아요수 */
+             , CATEGORY_CD    /* 상품카테고리코드 */
+             , DISP_YN        /* 전시여부 */
+             , DEL_YN         /* 삭제여부 */
+             , IMAGE1         /* 이미지1 */ 
+             , IMAGE2         /* 이미지2 */
+             , IMAGE3         /* 이미지3 */
+             , IMAGE4         /* 이미지4 */
+             , DESCRIPTION    /* 상품설명 */
+             , DELIVERY_PRICE /* 배송가격 */ 
+             , TITLE          /* 제목 */
+             , DIVISION_CD    /* 상품구분코드 */
+             , STATUS         /* 상태 */
+             , REG_DTTM       /* 등록일시 */
+             , UPD_DTTM       /* 수정일시 */
+          FROM TBL_PRODUCT    /* 상품정보 */
+         WHERE LOGIN_NO = #{loginNo}
+           <if test="delYn != null and delYn != ''">
+           AND DEL_YN      = #{delYn}
+           </if>
+           <if test="dispYn != null and dispYn != ''">
+           AND DISP_YN     = #{dispYn}
+           </if>
+           <if test="status != null and status != ''">
+           AND STATUS      = #{status}
+           </if>
+           <if test="categoryCd != null and categoryCd != ''">
+           AND CATEGORY_CD = #{categoryCd}
+           </if>
+           <if test="divisionCd != null and divisionCd != ''">
+           AND DIVISION_CD = #{divisionCd}
+           </if>
+           <if test="fromRegDate != null and fromRegDate != ''">
+           AND REG_DTTM <![CDATA[>=]]> #{fromRegDate}
+           </if>
+           <if test="toRegDate != null and toRegDate != ''">
+           AND UPD_DTTM <![CDATA[<=]]> #{toRegDate}
+           </if>
+         <choose>
+         <when test="sortStatus == 'NEWEST'">
+         ORDER BY REG_DTTM
+         </when>
+         <when test="sortStatus == 'NEWEST'">
+         ORDER BY REG_DTTM DESC
+         </when>
+         <when test="sortStatus == 'OLDEST'">
+         ORDER BY REG_DTTM ASC
+         </when>
+         <when test="sortStatus == 'HIGHPRICE'">
+         ORDER BY ITEM_PRICE DESC
+         </when>
+         <when test="sortStatus == 'LOWPRICE'">
+         ORDER BY ITEM_PRICE ASC
+         </when>
+         <when test="sortStatus == 'HIGHVIEWCNT'">
+         ORDER BY VIEW_CNT DESC
+         </when>
+         <when test="sortStatus == 'HIGHLIKECNT'">
+         ORDER BY LIKE_CNT DESC
+         </when>
+         </choose>    
+         LIMIT #{strtRow}, #{endRow}
+	</select>
+	
 	<select id="findByItemCd" resultType="String">
 		SELECT ITEM_CD     /* 상품코드 */
 		  FROM TBL_PRODUCT /* 상품정보 */
