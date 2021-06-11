@@ -19,6 +19,7 @@ import com.market.server.aop.LoginCheck.UserType;
 import com.market.server.dto.Search;
 import com.market.server.dto.option.OptionDTO;
 import com.market.server.dto.product.ProductDTO;
+import com.market.server.dto.product.ProductDetailDTO;
 import com.market.server.dto.product.TradingAreaDTO;
 import com.market.server.service.product.Impl.ProductServiceImpl;
 import com.market.server.utils.SessionUtil;
@@ -78,6 +79,9 @@ public class ProductController {
 		return new ResponseEntity<ProductsResponse>(productsResponse, HttpStatus.OK);
 	}
 	
+	// 본인이 등록한 상품 상세 조회
+	
+	
 	/**
 	 * 싱픔을 등록한다.
 	 * 
@@ -87,9 +91,10 @@ public class ProductController {
 	@PostMapping("insert")
 	@ResponseStatus(HttpStatus.CREATED)
 	@LoginCheck(type = UserType.USER)
-	public HttpStatus insertProduct(HttpSession session, @RequestBody ProductDTO productDTO) {
-		productDTO.setLoginNo(SessionUtil.getLoginUserNo(session));
-		productService.insertProduct(productDTO);
+	public HttpStatus insertProduct(HttpSession session, @RequestBody ProductDetailDTO productDetailDTO) {
+		//productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
+		productDetailDTO.getProductDTO().setLoginNo(1);
+		productService.insertProduct(productDetailDTO);
 		
 		return HttpStatus.CREATED;
 	}

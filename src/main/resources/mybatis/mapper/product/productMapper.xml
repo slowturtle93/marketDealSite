@@ -101,7 +101,7 @@
 		 WHERE ITEM_SEQ = #{itemSeq}
 	</select>
 
-	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDTO">
+	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDetailDTO">
 		<selectKey keyProperty="itemSeq" resultType="int" order="BEFORE">
     	SELECT IFNULL(MAX(ITEM_SEQ), 0) + 1 FROM TBL_PRODUCT
     	</selectKey>

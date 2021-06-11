@@ -39,9 +39,6 @@ public class ProductDTO {
 	private String regDttm;     // 등록일시
 	private String updDttm;     // 수정일시
 	
-	private List<OptionDTO> optionList;     // 상품옵션 
-	private TradingAreaDTO tradingAreaDTO;  // 거래가능지역
-	
 	public ProductDTO(){}
 	
 	/**
