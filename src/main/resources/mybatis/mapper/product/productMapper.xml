@@ -3,8 +3,8 @@
 
 <mapper namespace="com.market.server.mapper.product.ProductMapper">
 
-	<resultMap id="productDTO" type="com.market.server.dto.product.ProductDTO">
-		<result property="itemCd "       column="item_cd"/> 
+    <resultMap id="productDTO" type="com.market.server.dto.product.ProductDTO">
+        <result property="itemCd "       column="item_cd"/> 
         <result property="loginNo"       column="login_no"/>
         <result property="itemNm"        column="item_nm"/>
         <result property="itemPrice"     column="item_price"/>
@@ -24,10 +24,10 @@
         <result property="status"        column="status"/>
         <result property="regDttm"       column="reg_dttm"/>
         <result property="updDttm"       column="upd_dttm"/>
-	</resultMap>
+    </resultMap>
 	
-	<resultMap id="productDetailDTO" type="com.market.server.dto.product.ProductDetailDTO">
-		<result property="itemCd "       column="item_cd"/> 
+    <resultMap id="productDetailDTO" type="com.market.server.dto.product.ProductDetailDTO">
+        <result property="itemCd "       column="item_cd"/> 
         <result property="loginNo"       column="login_no"/>
         <result property="itemNm"        column="item_nm"/>
         <result property="itemPrice"     column="item_price"/>
@@ -47,7 +47,7 @@
         <result property="status"        column="status"/>
         <result property="regDttm"       column="reg_dttm"/>
         <result property="updDttm"       column="upd_dttm"/>
-	</resultMap>
+    </resultMap>
 	
 	<select id="myProductDetail" resultType="productDTO">
 	    SELECT ITEM_CD        /* 상품코드 */
@@ -143,6 +143,12 @@
          <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
          LIMIT #{strtRow}, #{endRow}
          </if>
+	</select>
+	
+	<select id="findByItemCd" parameterType="int" resultType="String">
+	    SELECT ITEM_CD     /* 상품코드 */
+	      FROM TBL_PRODUCT /* 상품정보 */
+	     WHERE ITEM_SEQ = #{itemSeq}
 	</select>
 
 	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDTO">
