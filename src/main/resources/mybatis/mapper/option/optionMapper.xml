@@ -68,5 +68,17 @@
 		)
 		</foreach>
 	</insert>
+	
+	<update id="UpdateOption" parameterType="java.util.List">
+		<foreach item ="option" collection="optionList" index="index" open="" separator=";" close="">
+		UPDATE TBL_OPTION                               /* 상품옵션 */
+	       SET OPTION_NM      = #{option.optionCd}      /* 옵션명 */
+	         , OP_CATEGORY_CD = #{option.opCategoryCd}  /* 옵션카테고리코드 */
+	         , DISP_YN        = #{option.dispYn}        /* 노출여부 */
+	         , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE OPTION_CD = #{option.optionCd}
+	       AND ITEM_CD   = #{option.itemCd}
+		</foreach>
+	</update>
 
 </mapper>

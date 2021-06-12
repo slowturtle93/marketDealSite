@@ -15,4 +15,5 @@ public interface OptionMapper {
 	
 	public int InsertOption(@Param("optionList") List<OptionDTO> optionList);
 	
+	public int UpdateOption(@Param("optionList") List<OptionDTO> optionList);
 }

@@ -35,4 +35,12 @@ public class OptionServiceImpl implements OptionService{
 		return optionMapper.InsertOption(optionList);
 	}
 
+	/**
+	 * 상품 옵션을 수정한다.
+	 */
+	@Override
+	public int UpdateOption(List<OptionDTO> optionList) {
+		return optionMapper.UpdateOption(optionList);
+	}
+
 }

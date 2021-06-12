@@ -11,4 +11,6 @@ public interface OptionService {
 	
 	public int InsertOption(List<OptionDTO> optionList);
 	
+	public int UpdateOption(List<OptionDTO> optionList);
+	
 }
