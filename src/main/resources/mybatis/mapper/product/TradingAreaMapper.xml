@@ -21,15 +21,23 @@
 	
 	<insert id="InsertTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
 		INSERT INTO TBL_TRADING_AREA(
-			  ITEM_CD /* 상품코드 */
-			, AREA1   /* 거래가능지역1 */
-			, AREA2   /* 거래가능지역2 */
-			, AREA3   /* 거래가능지역3 */
-		)VALUES(
+			   ITEM_CD /* 상품코드 */
+			 , AREA1   /* 거래가능지역1 */
+			 , AREA2   /* 거래가능지역2 */
+			 , AREA3   /* 거래가능지역3 */
+	   )VALUES (
 			  #{itemCd}
 			, #{area1}
 			, #{area2}
 			, #{area3}
-		)
+	   )
 	</insert>
+	
+	<update id="UpdateTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
+		UPDATE TBL_TRADING_AREA /* 상품거래지역정보 */
+		   SET AREA1 = #{area1} /* 거래지역1 */
+		     , AREA2 = #{area2} /* 거래지역2 */
+		     , AREA3 = #{area3} /* 거래지역3 */
+		 WHERE ITEM_CD = #{itemCd}
+	</update>
 </mapper>

@@ -32,5 +32,13 @@ public class TradingAreaServiceImpl implements TradingAreaService{
 	public int insertTradingArea(TradingAreaDTO tradingAreaDTO) {
 		return tradingAreaMapper.InsertTradingArea(tradingAreaDTO);
 	}
+	
+	/**
+	 * 상품 거래지역 정보를 수정한다.
+	 */
+	@Override
+	public int UpdateTradingArea(TradingAreaDTO tradingAreaDTO) {
+		return tradingAreaMapper.UpdateTradingArea(tradingAreaDTO);
+	}
 
 }

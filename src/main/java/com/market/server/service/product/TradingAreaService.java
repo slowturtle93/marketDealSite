@@ -8,4 +8,6 @@ public interface TradingAreaService {
 	public TradingAreaDTO getTradingArea(Search search);
 	
 	public int insertTradingArea(TradingAreaDTO tradingAreaDTO);
+	
+	public int UpdateTradingArea(TradingAreaDTO tradingAreaDTO);
 }

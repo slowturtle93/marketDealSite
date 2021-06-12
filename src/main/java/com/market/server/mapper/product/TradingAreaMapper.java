@@ -12,4 +12,6 @@ public interface TradingAreaMapper {
 	
 	public int InsertTradingArea(TradingAreaDTO tradingAreaDTO);
 	
+	public int UpdateTradingArea(TradingAreaDTO tradingAreaDTO);
+	
 }
