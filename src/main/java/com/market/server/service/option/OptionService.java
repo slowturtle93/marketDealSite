@@ -13,4 +13,6 @@ public interface OptionService {
 	
 	public int UpdateOption(List<OptionDTO> optionList);
 	
+	public int DeleteOption(Search search);
+	
 }

@@ -43,4 +43,12 @@ public class OptionServiceImpl implements OptionService{
 		return optionMapper.UpdateOption(optionList);
 	}
 
+	/**
+	 * 상품 옵션을 삭제한다.
+	 */
+	@Override
+	public int DeleteOption(Search search) {
+		return optionMapper.DeleteOption(search);
+	}
+
 }

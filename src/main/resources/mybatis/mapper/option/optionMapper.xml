@@ -80,5 +80,12 @@
 	       AND ITEM_CD   = #{option.itemCd}
 		</foreach>
 	</update>
+	
+	<update id="DeleteOption">
+	    UPDATE TBL_OPTION     /* 상품옵션정보 */
+	       SET DEL_YN   = 'Y' /* 삭제여부 */
+	         , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE ITEM_CD = #{itemCd} 
+	</update>
 
 </mapper>
