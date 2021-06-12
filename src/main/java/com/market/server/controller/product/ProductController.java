@@ -77,7 +77,7 @@ public class ProductController {
 		search.add("pgSz", productRequest.getPgSz()); // 페이지 당 row 수
 		search.setRow();
     	
-		List<ProductDTO> productList = productService.myProductInfo(search);
+		List<ProductDTO> productList = productService.productInfo(search);
 		ProductsResponse productsResponse = new ProductsResponse(productList);
 		
 		return new ResponseEntity<ProductsResponse>(productsResponse, HttpStatus.OK);
@@ -98,7 +98,7 @@ public class ProductController {
 		search.add("loginNo", SessionUtil.getLoginUserNo(session)); // 로그인번호
 		search.add("itemCd", itemCd); // 상품코드
 		
-		ProductDetailDTO productDetailDTO = productService.myProductDetail(search);
+		ProductDetailDTO productDetailDTO = productService.productDetail(search);
 		
 		return new ResponseEntity<ProductDetailDTO>(productDetailDTO, HttpStatus.OK);
 	}

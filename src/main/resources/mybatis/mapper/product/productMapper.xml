@@ -49,7 +49,7 @@
         <result property="updDttm"       column="upd_dttm"/>
     </resultMap>
 	
-	<select id="myProductDetail" resultType="productDTO">
+	<select id="productDetail" resultType="productDTO">
 	    SELECT ITEM_CD        /* 상품코드 */
              , ITEM_NM        /* 상품명 */
              , ITEM_PRICE     /* 상품가격 */
@@ -70,11 +70,16 @@
              , REG_DTTM       /* 등록일시 */
              , UPD_DTTM       /* 수정일시 */
           FROM TBL_PRODUCT    /* 상품정보 */
-         WHERE ITEM_CD  = #{itemCd}
+         WHERE 1=1
+           <if test="itemCd != null and itemCd != ''">
+           AND ITEM_CD  = #{itemCd}
+           </if>
+           <if test="loginNo != null and loginNo != ''">
            AND LOGIN_NO = #{loginNo}
+           </if>
 	</select>
 	
-	<select id="myProductInfo" resultType="productDTO">
+	<select id="productInfo" resultType="productDTO">
 		SELECT ITEM_CD        /* 상품코드 */
              , ITEM_NM        /* 상품명 */
              , ITEM_PRICE     /* 상품가격 */
@@ -95,7 +100,10 @@
              , REG_DTTM       /* 등록일시 */
              , UPD_DTTM       /* 수정일시 */
           FROM TBL_PRODUCT    /* 상품정보 */
-         WHERE LOGIN_NO = #{loginNo}
+         WHERE 1=1
+           <if test="loginNo != null and loginNo != ''">
+           LOGIN_NO = #{loginNo}
+           </if>
            <if test="delYn != null and delYn != ''">
            AND DEL_YN      = #{delYn}
            </if>
@@ -118,9 +126,6 @@
            AND UPD_DTTM <![CDATA[<=]]> #{toRegDate}
            </if>
          <choose>
-         <when test="sortStatus == 'NEWEST'">
-         ORDER BY REG_DTTM
-         </when>
          <when test="sortStatus == 'NEWEST'">
          ORDER BY REG_DTTM DESC
          </when>

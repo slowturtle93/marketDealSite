@@ -38,18 +38,18 @@ public class ProductServiceImpl implements ProductService{
 	 * 본인이 등록한 상품을 조회한다.
 	 */
 	@Override
-	public List<ProductDTO> myProductInfo(Search search) {
-		return productMapper.myProductInfo(search);
+	public List<ProductDTO> productInfo(Search search) {
+		return productMapper.productInfo(search);
 	}
 	
 	/**
 	 * 상품 상세 정보를 조회한다.
 	 */
 	@Override
-	public ProductDetailDTO myProductDetail(Search search) {
+	public ProductDetailDTO productDetail(Search search) {
 		ProductDetailDTO productDetailDTO = new ProductDetailDTO();
 		
-		productDetailDTO.setProductDTO(productMapper.myProductDetail(search));         // 상품 정보 set
+		productDetailDTO.setProductDTO(productMapper.productDetail(search));         // 상품 정보 set
 		productDetailDTO.setOptionList(optionService.getOption(search));               // 상품 옵션정보 set
 		productDetailDTO.setTradingAreaDTO(tradingAreaService.getTradingArea(search)); // 상품 거래정보 set
 		
