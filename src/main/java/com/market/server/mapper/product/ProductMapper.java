@@ -19,6 +19,8 @@ public interface ProductMapper {
 	
 	public int UpdateProduct(ProductDTO productDTO);
 	
+	public int DeleteProduct(Search search);
+	
 	public String findByItemCd(@Param("itemSeq") int itemSeq);
 	
 }

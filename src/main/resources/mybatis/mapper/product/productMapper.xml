@@ -222,4 +222,12 @@
 	       AND LOGIN_NO = #{loginNo}
 	</update>
 	
+	<update id="DeleteProduct">
+	    UPDATE TBL_PRODUCT    /* 상품정보 */
+	       SET DEL_YN   = 'Y' /* 삭제여부 */
+	         , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE ITEM_CD  = #{itemCd}
+	       AND LOGIN_NO = #{loginNo}
+	</update>
+	
 </mapper>

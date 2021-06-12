@@ -15,4 +15,6 @@ public interface ProductService {
 	public void insertProduct(ProductDetailDTO productDetailDTO);
 	
 	public void updateProduct(ProductDetailDTO productDetailDTO);
+	
+	public void deleteProduct(Search search);
 }

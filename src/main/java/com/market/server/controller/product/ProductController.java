@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,6 +131,23 @@ public class ProductController {
 	public void updateProduct(HttpSession session, @RequestBody ProductDetailDTO productDetailDTO) {
 		productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
 		productService.updateProduct(productDetailDTO);
+	}
+	
+	/**
+	 * 등록한 상품 정보를 삭제한다.
+	 * 
+	 * @param session
+	 * @param itemCd
+	 */
+	@DeleteMapping("delete/{itemCd}")
+	@LoginCheck(type = UserType.USER)
+	public void deleteProduct(HttpSession session, @PathVariable("itemCd") String itemCd) {
+		
+		Search search = new Search();
+		search.add("itemCd", itemCd);
+		search.add("loginNo", SessionUtil.getLoginUserNo(session));
+		
+		productService.deleteProduct(search);
 	}
 	
 	// -------------- response 객체 --------------

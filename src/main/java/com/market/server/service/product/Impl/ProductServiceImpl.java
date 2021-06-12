@@ -160,4 +160,28 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
+	/**
+	 * 등록한 상품정보를 삭제한다.
+	 */
+	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void deleteProduct(Search search) {
+		
+		// 상품 거래지역 정보 삭제
+		if(tradingAreaService.DeleteTradingArea(search) != 1) {
+			log.error("Delete Trading Area Error! {}", search.get("itemCd"));
+		    throw new RuntimeException("Delete Trading Area Error");
+		}
+		// 상품 옵션 삭제
+		if(optionService.DeleteOption(search) < 1) {
+			log.error("Delete Product Option Error! {}", search.get("itemCd"));
+		    throw new RuntimeException("Delete Product Option Error");
+		}
+		// 상품 정보 삭제
+		if(productMapper.DeleteProduct(search) != 1) {
+			log.error("Delete Product Error! {}", search.get("itemCd"));
+		    throw new RuntimeException("Delete Product Error");
+		}
+	}
+
 }
