@@ -11,9 +11,9 @@ import com.market.server.dto.product.ProductDTO;
 @Mapper
 public interface ProductMapper {
 	
-	public List<ProductDTO> myProductInfo(Search search);
+	public List<ProductDTO> productInfo(Search search);
 	
-	public ProductDTO myProductDetail(Search search);
+	public ProductDTO productDetail(Search search);
 	
 	public int InsertProduct(ProductDTO productDTO);
 	

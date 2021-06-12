@@ -8,9 +8,9 @@ import com.market.server.dto.product.ProductDetailDTO;
 
 public interface ProductService {
 	
-	public List<ProductDTO> myProductInfo(Search search);
+	public List<ProductDTO> productInfo(Search search);
 	
-	public ProductDetailDTO myProductDetail(Search search);
+	public ProductDetailDTO productDetail(Search search);
 	
 	public void insertProduct(ProductDetailDTO productDetailDTO);
 	
