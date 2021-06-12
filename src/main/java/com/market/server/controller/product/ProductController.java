@@ -129,8 +129,7 @@ public class ProductController {
 	@PatchMapping("update")
 	@LoginCheck(type = UserType.USER)
 	public void updateProduct(HttpSession session, @RequestBody ProductDetailDTO productDetailDTO) {
-//		productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
-		productDetailDTO.getProductDTO().setLoginNo(1);
+		productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
 		productService.updateProduct(productDetailDTO);
 	}
 	
