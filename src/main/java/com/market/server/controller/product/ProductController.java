@@ -113,8 +113,7 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@LoginCheck(type = UserType.USER)
 	public HttpStatus insertProduct(HttpSession session, @RequestBody ProductDetailDTO productDetailDTO) {
-		//productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
-		productDetailDTO.getProductDTO().setLoginNo(1);
+		productDetailDTO.getProductDTO().setLoginNo(SessionUtil.getLoginUserNo(session));
 		productService.insertProduct(productDetailDTO);
 		
 		return HttpStatus.CREATED;
