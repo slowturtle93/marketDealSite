@@ -145,7 +145,7 @@
          </if>
 	</select>
 
-	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDetailDTO">
+	<insert id="InsertProduct" parameterType="com.market.server.dto.product.ProductDTO">
 		<selectKey keyProperty="itemSeq" resultType="int" order="BEFORE">
     	SELECT IFNULL(MAX(ITEM_SEQ), 0) + 1 FROM TBL_PRODUCT
     	</selectKey>
@@ -196,4 +196,24 @@
 			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
 		)
 	</insert>
+	
+	<update id="UpdateProduct" parameterType="com.market.server.dto.product.ProductDTO">
+	    UPDATE TBL_PRODUCT                       /* 상품정보 */
+	       SET ITEM_NM        = #{itemNm}        /* 상품명 */
+	         , ITEM_PRICE     = #{itemPrice}     /* 상품가격 */
+	         , CATEGORY_CD    = #{categoryCd}    /* 상품카테고리코드 */
+	         , DISP_YN        = #{dispYn}        /* 전시여부 */
+	         , IMAGE1         = #{image1}        /* 이미지1 */
+	         , IMAGE2         = #{image2}        /* 이미지2 */
+	         , IMAGE3         = #{image3}        /* 이미지3 */ 
+	         , IMAGE4         = #{image4}        /* 이미지4 */
+	         , DESCRIPTION    = #{description}   /* 상품설명 */
+	         , DELIVERY_PRICE = #{deliveryPrice} /* 배송가격 */
+	         , TITLE          = #{title}         /* 제목 */ 
+	         , STATUS         = #{status}        /* 상태 */
+	         , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE ITEM_CD  = #{itemCd}
+	       AND LOGIN_NO = #{loginNo}
+	</update>
+	
 </mapper>

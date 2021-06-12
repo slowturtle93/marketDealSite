@@ -65,8 +65,8 @@ public class ProductServiceImpl implements ProductService{
 	public void insertProduct(ProductDetailDTO productDetailDTO) {
 		
 		if(ProductDTO.hasNullDataBeforeRegister(productDetailDTO.getProductDTO())) { // 상품 정보 등록 시 NULL 체크
-			log.error("Insert ERROR! {}", productDetailDTO);
-			throw new RuntimeException("Insert ERROR! 옵션 카테고리 이름을 확인해주세요.\n" + "opCategoryNm : " + productDetailDTO);
+			log.error("Insert ERROR! {}", productDetailDTO.getProductDTO());
+			throw new RuntimeException("Insert ERROR! 상품 정보를 확인해주세요.\n" + "productDTO : " + productDetailDTO.getProductDTO());
 		}
 		
 		// 상품등록
@@ -94,15 +94,67 @@ public class ProductServiceImpl implements ProductService{
 			
 			// 거래가능지역이 NULL이 아니고, 등록한 상품의 상품구분코드가 직거래가 가능할 경우
 			if(productDetailDTO.getTradingAreaDTO() != null && "Y".equals(productDivisionDTO.get(0).getDirectYn())) {
-				productDetailDTO.getTradingAreaDTO().setItemCd(itemCd);
 				
+				productDetailDTO.getTradingAreaDTO().setItemCd(itemCd);
 				tradingAreaService.insertTradingArea(productDetailDTO.getTradingAreaDTO());
+			}else if(!"Y".equals(productDivisionDTO.get(0).getDirectYn())){ // 거래 지역 등록이 불가능 한 경우
+				
+				log.error("Insert Product TradingArea Not Possible! {}", productDivisionDTO.get(0).getDirectYn());
+			    throw new RuntimeException("Insert Product TradingArea Not Possible");
 			}else { //거래지역 등록 실패인 경우
-				log.error("Insert Product TradingArea Error! {}", productDetailDTO.getTradingAreaDTO().toString());
+				
+				log.error("Insert Product TradingArea Error! {}", productDivisionDTO.get(0).getDirectYn());
 			    throw new RuntimeException("Insert Product TradingArea Error");
 			}
-			
 		}else { //상품등록 실패인 경우
+			log.error("Insert Product Error! {}", productDetailDTO.toString());
+		    throw new RuntimeException("Insert Product Error");
+		}
+	}
+
+	/**
+	 * 상품 정보를 수정한다.
+	 */
+	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void updateProduct(ProductDetailDTO productDetailDTO) {
+		
+		if(ProductDTO.hasNullDataBeforeRegister(productDetailDTO.getProductDTO())) { // 상품 정보 등록 시 NULL 체크
+			log.error("Insert ERROR! {}", productDetailDTO);
+			throw new RuntimeException("Insert ERROR! 상품 정보를 확인해주세요.\n" + "opCategoryNm : " + productDetailDTO);
+		}
+		
+		// 상품정보 수정
+		int result = productMapper.UpdateProduct(productDetailDTO.getProductDTO());
+		
+		if(result == 1) { // 상품수정 성공인 경우
+			
+			if(optionService.UpdateOption(productDetailDTO.getOptionList()) < 1) { 
+				//상품 옵션 정보 수정 실패인 경우
+				log.error("Update Product Option Error! {}", productDetailDTO.getOptionList().toString());
+			    throw new RuntimeException("Update Product Option Error");
+			}
+
+			Search search = new Search();
+			search.add("divisionCd", productDetailDTO.getProductDTO().getDivisionCd());
+			// 등록된 상품의 구분코드가 직거래가능 여부 확인
+			List<ProductDivisionDTO> productDivisionDTO =  productDivisionService.getDivision(search);
+			
+			// 거래가능지역이 NULL이 아니고, 등록한 상품의 상품구분코드가 직거래가 가능할 경우
+			if(productDetailDTO.getTradingAreaDTO() != null && "Y".equals(productDivisionDTO.get(0).getDirectYn())) {
+				
+				tradingAreaService.UpdateTradingArea(productDetailDTO.getTradingAreaDTO());
+			}else if(!"Y".equals(productDivisionDTO.get(0).getDirectYn())) { // 거래 지역 수정이 불가능 한 경우
+				
+				log.error("Update Product TradingArea Not Possible! {}", productDivisionDTO.get(0).getDirectYn());
+			    throw new RuntimeException("Update Product TradingArea Not Possible");
+			}else { //거래지역 등록 실패인 경우
+				
+				log.error("Update Product TradingArea Error! {}", productDetailDTO.getTradingAreaDTO().toString());
+			    throw new RuntimeException("Update Product TradingArea Error");
+			}
+			
+		}else { //상품정보 수정 실패인 경우
 			log.error("Insert Product Error! {}", productDetailDTO.toString());
 		    throw new RuntimeException("Insert Product Error");
 		}
