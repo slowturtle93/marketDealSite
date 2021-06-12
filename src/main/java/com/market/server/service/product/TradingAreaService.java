@@ -10,4 +10,6 @@ public interface TradingAreaService {
 	public int insertTradingArea(TradingAreaDTO tradingAreaDTO);
 	
 	public int UpdateTradingArea(TradingAreaDTO tradingAreaDTO);
+	
+	public int DeleteTradingArea(Search search);
 }

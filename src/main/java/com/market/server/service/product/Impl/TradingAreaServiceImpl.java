@@ -41,4 +41,12 @@ public class TradingAreaServiceImpl implements TradingAreaService{
 		return tradingAreaMapper.UpdateTradingArea(tradingAreaDTO);
 	}
 
+	/**
+	 * 상품 거래지역 정보를 삭제한다.
+	 */
+	@Override
+	public int DeleteTradingArea(Search search) {
+		return tradingAreaMapper.DeleteTradingArea(search);
+	}
+
 }

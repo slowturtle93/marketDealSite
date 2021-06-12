@@ -14,4 +14,6 @@ public interface TradingAreaMapper {
 	
 	public int UpdateTradingArea(TradingAreaDTO tradingAreaDTO);
 	
+	public int DeleteTradingArea(Search search);
+	
 }
