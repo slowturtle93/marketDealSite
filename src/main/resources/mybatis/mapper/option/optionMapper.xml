@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.option.OptionMapper">
+
+	<resultMap id="optionDTO" type="com.market.server.dto.option.OptionDTO">
+		<result property="optionCd"     column="option_cd"/>
+		<result property="optionNm"     column="option_nm"/>
+		<result property="itemCd"       column="item_cd"/>
+		<result property="opCategoryCd" column="op_category_cd"/>
+		<result property="opCategoryNm" column="op_category_nm"/>
+		<result property="delYn"        column="del_yn"/>
+		<result property="dispYn"       column="disp_yn"/>
+		<result property="regDttm"      column="reg_dttm"/>
+		<result property="updDttm"      column="upd_dttm"/> 
+	</resultMap>
+	
+	<select id="getOption" resultType="optionDTO">
+	    SELECT T1.OPTION_CD
+	         , T1.OPTION_NM
+	         , T1.ITEM_CD
+	         , T1.OP_CATEGORY_CD
+	         , T2.OP_CATEGORY_NM
+	         , T1.DEL_YN
+	         , T1.DISP_YN
+	         , T1.REG_DTTM
+	         , T1.UPD_DTTM
+	      FROM TBL_OPTION T1
+	      LEFT OUTER JOIN
+	           TBL_OPTION_CATEGORY T2
+	        ON T1.OP_CATEGORY_CD = T2.OP_CATEGORY_CD
+	     WHERE 1=1
+	       <if test="itemCd != null and itemCd != ''">
+	       AND T1.ITEM_CD = #{itemCd}
+	       </if>
+	       AND T2.DEL_YN  = 'N'
+	       AND T2.DISP_YN = 'Y'
+	</select>
+
+	<insert id="InsertOption" parameterType="java.util.List">
+	    <selectKey keyProperty="optionSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(OPTION_SEQ), 0) + 1 FROM TBL_OPTION
+    	</selectKey>
+	    
+		INSERT INTO TBL_OPTION(
+		      OPTION_SEQ     /* 옵션시퀀스 */
+		    , OPTION_CD      /* 옵션코드 */
+		    , OPTION_NM      /* 옵션명 */
+		    , ITEM_CD        /* 상품코드 */
+		    , OP_CATEGORY_CD /* 옵션카테고리코드 */
+		    , DEL_YN         /* 삭제여부 */
+		    , DISP_YN        /* 전시여부 */
+		    , REG_DTTM       /* 등록일시 */
+		    , UPD_DTTM       /* 수정일시 */
+		)
+		VALUES
+		<foreach item ="option" collection="optionList" index="index" open="" separator="," close="">
+		(
+		      (#{optionSeq} + #{index})
+			, (SELECT CONCAT('OP', LPAD((#{optionSeq} + #{index}), 3, '0')) FROM DUAL)
+			, #{option.optionNm}
+			, #{option.itemCd}
+			, #{option.opCategoryCd}
+			, 'N'
+			, 'Y'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+		</foreach>
+	</insert>
+	
+	<update id="UpdateOption" parameterType="java.util.List">
+		<foreach item ="option" collection="optionList" index="index" open="" separator=";" close="">
+		UPDATE TBL_OPTION                               /* 상품옵션 */
+	       SET OPTION_NM      = #{option.optionCd}      /* 옵션명 */
+	         , OP_CATEGORY_CD = #{option.opCategoryCd}  /* 옵션카테고리코드 */
+	         , DISP_YN        = #{option.dispYn}        /* 노출여부 */
+	         , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE OPTION_CD = #{option.optionCd}
+	       AND ITEM_CD   = #{option.itemCd}
+		</foreach>
+	</update>
+	
+	<update id="DeleteOption">
+	    UPDATE TBL_OPTION     /* 상품옵션정보 */
+	       SET DEL_YN   = 'Y' /* 삭제여부 */
+	         , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+	     WHERE ITEM_CD = #{itemCd} 
+	</update>
+
+</mapper>

@@ -46,12 +46,12 @@ public class ProductCategoryController {
 	 * @return
 	 */
 	@GetMapping("select")
-	@LoginCheck(type = UserType.ADMIN)
 	public List<ProductCategoryDTO> getCategory(@RequestBody CategoryRequest categoryRequest){
 		Search search = new Search();
 		
-		search.add("delYn"  , categoryRequest.getDelYn());  // 삭제여부
-		search.add("dispYn" , categoryRequest.getDispYn()); // 전시여부
+		search.add("delYn" , categoryRequest.getDelYn());          // 삭제여부
+		search.add("dispYn", categoryRequest.getDispYn());         // 전시여부
+		search.add("categoryCd", categoryRequest.getCategoryCd()); // 상품카테고리코드
 		
 		search.add("pg"  , categoryRequest.getPg());   // 현재페이제
 		search.add("pgSz", categoryRequest.getPgSz()); // 한 페이지당 Row 수
@@ -108,9 +108,8 @@ public class ProductCategoryController {
 	private static class CategoryRequest {
 		private String delYn;
 		private String dispYn;
-		@NonNull
+		private String categoryCd;
 		private int pg;
-		@NonNull
 		private int pgSz;
 	}
 	

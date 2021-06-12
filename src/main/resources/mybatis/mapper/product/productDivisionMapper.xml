@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.product.ProductDivisionMapper">
+
+	<resultMap id="productDivisionDTO" type="com.market.server.dto.product.ProductDivisionDTO">
+		<result property="divisionCd" column="division_cd"/> 
+        <result property="divisionNm" column="division_nm"/>
+        <result property="delYn"      column="del_yn"/>
+        <result property="dispYn"     column="disp_yn"/>
+        <result property="directYn"   column="direct_yn"/>
+        <result property="regDttm"    column="reg_dttm"/>
+        <result property="updDttm"    column="upd_dttm"/>
+	</resultMap>
+
+	<select id="getDivision" resultType="productDivisionDTO">
+		SELECT DIVISION_CD          /* 상품구분코드 */
+		     , DIVISION_NM          /* 상품구분명 */
+		     , DEL_YN               /* 삭제여부 */
+		     , DISP_YN              /* 전시여부 */ 
+		     , DIRECT_YN            /* 직거래가능여부 */
+		     , REG_DTTM             /* 등록일시 */
+		     , UPD_DTTM             /* 수정일시 */
+		  FROM TBL_PRODUCT_DIVISION /* 상품구분정보 */
+		 WHERE 1=1
+		   <if test="delYn != null and delYn != ''">
+		   AND DEL_YN    = #{delYn}
+		   </if>
+		   <if test="dispYn != null and dispYn != ''">
+		   AND DISP_YN   = #{dispYn}
+		   </if>
+		   <if test="directYn != null and directYn != ''">
+		   AND DIRECT_YN = #{directYn}
+		   </if>
+		   <if test="divisionCd != null and divisionCd != ''">
+		   AND DIVISION_CD = #{divisionCd}
+		   </if>
+		 ORDER BY REG_DTTM DESC
+		 <if test="strtRow != null and strtRow != '' and endRow != null and endRow != ''">
+		 LIMIT #{strtRow}, #{endRow}
+		 </if>
+	</select>
+	
+	
+	<select id="isDuplicatedNm" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		  FROM TBL_PRODUCT_DIVISION /* 상품구분정보 */
+		 WHERE DIVISION_NM = #{divisionNm}
+		   AND DEL_YN = 'N'
+	</select>
+	
+	<insert id="InsertDivision" parameterType="java.util.List">
+	    <selectKey keyProperty="divisionSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(DIVISION_SEQ), 0) + 1 FROM TBL_PRODUCT_DIVISION
+    	</selectKey>
+	    
+		INSERT INTO TBL_PRODUCT_DIVISION(
+		      DIVISION_SEQ /* 상품구분정보시퀀스 */
+		    , DIVISION_CD  /* 상품구분코드 */
+		    , DIVISION_NM  /* 상품구분명 */
+		    , DIRECT_YN    /* 직거래가능여부 */
+		    , DEL_YN       /* 삭제여부 */
+		    , DISP_YN      /* 전시여부 */
+		    , REG_DTTM     /* 등록일시 */
+		    , UPD_DTTM     /* 수정일시 */
+		)
+		VALUES
+		<foreach item ="division" collection="divisionList" index="index" open="" separator="," close="">
+		(
+		      (#{divisionSeq} + #{index})
+			, (SELECT CONCAT('PD', LPAD((#{divisionSeq} + #{index}), 3, '0')) FROM DUAL)
+			, #{division.divisionNm}
+			, #{division.directYn}
+			, 'N'
+			, 'Y'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+		</foreach>
+	</insert>
+	
+	<update id="UpdateDivision" parameterType="java.util.List">
+		<foreach item ="division" collection="divisionList" index="index" open="" separator=";" close="">
+		UPDATE TBL_PRODUCT_DIVISION                                     /* 상품구분정보 */
+		   SET OP_CATEGORY_NM = #{division.divisionNm}                  /* 상품구분명 */
+		     , DIRECT_YN      = #{division.directYn}                    /* 직거래가능여부 */
+		     , DISP_YN        = #{division.dispYn}                      /* 전시여부 */
+		     , UPD_DTTM       = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE OP_CATEGORY_CD = #{division.divisionCd}                  /* 상품구분코드 */
+		 </foreach>
+	</update>
+	
+	<update id="DeleteDivision" parameterType="java.util.List">
+		UPDATE TBL_PRODUCT_DIVISION                               /* 상품구분정보 */
+		   SET DEL_YN   = 'Y'                                     /* 삭제여부 */
+		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE 1=1
+		   AND DIVISION_CD IN 
+		   <foreach item ="division" collection="divisionList" index="index" open="(" separator="," close=")">
+		       #{division.divisionCd}
+		   </foreach>
+	</update>
+	
+</mapper>
