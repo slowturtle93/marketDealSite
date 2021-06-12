@@ -9,10 +9,13 @@ import lombok.ToString;
 @ToString
 public class TradingAreaDTO {
 	
-	private String itemCd;    // 상품코드
-	private String area1;     // 거래가능지역1
-	private String area2;     // 거래가능지역2
-	private String area3;     // 거래가능지역3
+	private String itemCd;  // 상품코드
+	private String area1;   // 거래가능지역1
+	private String area2;   // 거래가능지역2
+	private String area3;   // 거래가능지역3
+	private String delYn;   // 삭제여부  
+	private String regDttm; // 등록일시
+	private String updDttm; // 수정일시
 	
 	public TradingAreaDTO(){}
 	

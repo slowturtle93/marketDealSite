@@ -4,40 +4,53 @@
 <mapper namespace="com.market.server.mapper.product.TradingAreaMapper">
 	
 	<resultMap id="tradingAreaDTO" type="com.market.server.dto.product.TradingAreaDTO">
-		<result property="itemCd" column="item_cd"/>
-		<result property="area1"  column="area1"/>
-		<result property="area2"  column="area2"/>
-		<result property="area3"  column="area3"/>
+		<result property="itemCd"  column="item_cd"/>
+		<result property="area1"   column="area1"/>
+		<result property="area2"   column="area2"/>
+		<result property="area3"   column="area3"/>
+		<result property="delYn"   column="del_yn"/>
+		<result property="regDttm" column="reg_dttm"/>
+		<result property="updDttm" column="upd_dttm"/>
 	</resultMap>
 	
 	<select id="getTradingArea" resultType="tradingAreaDTO">
-		SELECT ITEM_CD
-		     , AREA1
-		     , AREA2
-		     , AREA3
-		  FROM TBL_TRADING_AREA
+		SELECT ITEM_CD  /* 상품코드 */
+		     , AREA1    /* 거래지역1 */
+		     , AREA2    /* 거래지역2 */
+		     , AREA3    /* 거래지역3 */
+		     , DEL_YN   /* 삭제여부 */  
+		     , REG_DTTM /* 등록일시 */
+		     , UPD_DTTM /* 수정일시 */
+		  FROM TBL_TRADING_AREA /* 상품거래지역정보 */
 		 WHERE ITEM_CD = #{itemCd}
 	</select>
 	
 	<insert id="InsertTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
 		INSERT INTO TBL_TRADING_AREA(
-			   ITEM_CD /* 상품코드 */
-			 , AREA1   /* 거래가능지역1 */
-			 , AREA2   /* 거래가능지역2 */
-			 , AREA3   /* 거래가능지역3 */
+			   ITEM_CD  /* 상품코드 */
+			 , AREA1    /* 거래가능지역1 */
+			 , AREA2    /* 거래가능지역2 */
+			 , AREA3    /* 거래가능지역3 */
+			 , DEL_YN   /* 삭제여부 */
+			 , REG_DTTM /* 등록일시 */
+			 , UPD_DTTM /* 수정일시 */
 	   )VALUES (
 			  #{itemCd}
 			, #{area1}
 			, #{area2}
 			, #{area3}
+			, 'N'
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
 	   )
 	</insert>
 	
 	<update id="UpdateTradingArea" parameterType="com.market.server.dto.product.TradingAreaDTO">
 		UPDATE TBL_TRADING_AREA /* 상품거래지역정보 */
-		   SET AREA1 = #{area1} /* 거래지역1 */
-		     , AREA2 = #{area2} /* 거래지역2 */
-		     , AREA3 = #{area3} /* 거래지역3 */
+		   SET AREA1    = #{area1} /* 거래지역1 */
+		     , AREA2    = #{area2} /* 거래지역2 */
+		     , AREA3    = #{area3} /* 거래지역3 */
+		     , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
 		 WHERE ITEM_CD = #{itemCd}
 	</update>
 </mapper>
