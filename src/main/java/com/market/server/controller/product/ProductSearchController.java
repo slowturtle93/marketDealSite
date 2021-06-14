@@ -62,7 +62,12 @@ public class ProductSearchController {
 		return new ResponseEntity<SearchResponse>(searchResponse, HttpStatus.OK);
 	}
 	
-	//상품 상세 정보를 조회한다.
+	/**
+	 * 상품 상세 정보를 조회한다.
+	 * 
+	 * @param itemCd
+	 * @return
+	 */
 	@GetMapping("{itemCd}/deteil")
 	public ResponseEntity<ProductDetailDTO> getProductDetail(@PathVariable("itemCd") String itemCd){
 		
