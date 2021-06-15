@@ -62,7 +62,7 @@ public class OrderStatusController {
 	}
 	
 	/**
-	 * 옵션 카테고리를 수정한다.
+	 * 주문상태코드를 수정한다.
 	 * 
 	 * @param List<OrderStatusDTO>
 	 */
