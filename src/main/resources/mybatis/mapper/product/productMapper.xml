@@ -26,29 +26,6 @@
         <result property="updDttm"       column="upd_dttm"/>
     </resultMap>
 	
-    <resultMap id="productDetailDTO" type="com.market.server.dto.product.ProductDetailDTO">
-        <result property="itemCd "       column="item_cd"/> 
-        <result property="loginNo"       column="login_no"/>
-        <result property="itemNm"        column="item_nm"/>
-        <result property="itemPrice"     column="item_price"/>
-        <result property="viewCnt"       column="view_cnt"/>
-        <result property="likeCnt"       column="like_cnt"/>
-        <result property="categoryCd"    column="category_cd"/>
-        <result property="dispYn"        column="disp_yn"/>
-        <result property="delYn"         column="del_yn"/>
-        <result property="image1"        column="image1"/>
-        <result property="image2"        column="image2"/>
-        <result property="image3"        column="image3"/>
-        <result property="image4"        column="image4"/>
-        <result property="description"   column="description"/>
-        <result property="deliveryPrice" column="delivery_price"/>
-        <result property="title"         column="title"/>
-        <result property="divisionCd"    column="division_cd"/>
-        <result property="status"        column="status"/>
-        <result property="regDttm"       column="reg_dttm"/>
-        <result property="updDttm"       column="upd_dttm"/>
-    </resultMap>
-	
 	<select id="productDetail" resultType="productDTO">
 	    SELECT ITEM_CD        /* 상품코드 */
              , ITEM_NM        /* 상품명 */
