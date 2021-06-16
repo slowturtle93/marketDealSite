@@ -12,6 +12,7 @@ import com.market.server.dto.Search;
 import com.market.server.dto.order.OrderDTO;
 import com.market.server.dto.order.OrderDetailDTO;
 import com.market.server.dto.product.ProductDTO;
+import com.market.server.dto.product.ProductDetailDTO;
 import com.market.server.error.exception.TotalPriceMismatchException;
 import com.market.server.mapper.order.OrderMapper;
 import com.market.server.service.order.OrderService;
@@ -44,13 +45,13 @@ public class OrderServiceImpl implements OrderService{
 		
 		Search search = new Search();
 		search.add("itemCd", orderDTO.getItemCd());
-		List<ProductDTO> productDTO = productService.productInfo(search);
+		ProductDetailDTO productDTO = productService.productDetail(search);
 		
 		// 총결제금액 확인
-		int orderCnt       = orderDTO.getOrderCnt();               // 주문수량
-		long orderPrice    = productDTO.get(0).getItemPrice();     // 주문금액
-		long deliveryPrice = productDTO.get(0).getDeliveryPrice(); // 배송금액
-		long discountPrice = orderDTO.getDiscountPrice();          // 할인금액
+		int orderCnt       = orderDTO.getOrderCnt();                        // 주문수량
+		long orderPrice    = productDTO.getProductDTO().getItemPrice();     // 주문금액
+		long deliveryPrice = productDTO.getProductDTO().getDeliveryPrice(); // 배송금액
+		long discountPrice = orderDTO.getDiscountPrice();                   // 할인금액
 		long totalPrice    = (orderCnt * orderPrice) + deliveryPrice - discountPrice; // server total price
 		
 		if(totalPrice != orderDTO.getTotalPrice()) {
@@ -71,6 +72,4 @@ public class OrderServiceImpl implements OrderService{
 	public List<OrderDetailDTO> getOrderList(int loginNo) {
 		return orderMapper.getOrderList(loginNo);
 	}
-	
-
 }
