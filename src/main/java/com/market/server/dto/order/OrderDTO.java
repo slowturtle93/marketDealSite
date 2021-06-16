@@ -17,6 +17,7 @@ public class OrderDTO {
 	private String orderStatusCd; // 주문상태코드
 	                              /* 
 	                               *  OSC001 - 접수, OSC002 - 상품준비중, OSC003 - 잡화처리, OSC004 - 간선하차, OSC005 - 배송출고, OSC006 - 배송중, OSC007 -배송완료
+	                               *  OSC008 - 환불, OSC009 - 환불완료
 	                               */
 	private Integer orderCnt;     // 주문수량
 	private Long orderPrice;      // 주문금액
@@ -28,6 +29,12 @@ public class OrderDTO {
 	private String updDttm;       // 수정일시
 	
 	public OrderDTO(){}
+	
+	public OrderDTO(String orderCd, String orderStatusCd, String regDttm){
+		this.orderCd       = orderCd;
+		this.orderStatusCd = orderStatusCd;
+		this.regDttm       = regDttm;
+	}
 	
 	/**
 	 * 주문상태코드 등록 시 필수 값 NULL 체크

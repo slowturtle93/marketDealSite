@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.market.server.dao.OrderLogDao;
 import com.market.server.dto.Search;
 import com.market.server.dto.order.OrderDTO;
 import com.market.server.dto.order.OrderDetailDTO;
-import com.market.server.dto.product.ProductDTO;
 import com.market.server.dto.product.ProductDetailDTO;
 import com.market.server.error.exception.TotalPriceMismatchException;
 import com.market.server.mapper.order.OrderMapper;
@@ -29,6 +29,9 @@ public class OrderServiceImpl implements OrderService{
 
 	@Autowired
 	private ProductServiceImpl productService;
+	
+	@Autowired
+	private OrderLogDao orderLogDao;
 
 	/**
 	 * 상품을 주문한다.
@@ -71,5 +74,26 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<OrderDetailDTO> getOrderList(int loginNo) {
 		return orderMapper.getOrderList(loginNo);
+	}
+
+	/**
+	 * 주문상품의 주문상태코드를 변경한다.
+	 */
+	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void updateOrderStatus(String orderCd, String orderStatusCd) {
+		
+		int result = orderMapper.updateOrderStatus(orderCd, orderStatusCd);
+		
+		if(result != 1) {
+			log.error("Update ERROR! {}", orderCd);
+			throw new RuntimeException("Update ERROR! 주문번호를 확인해주세요.\n" + "orderCd : " + orderCd);
+		}else {
+			//현재시간 계산
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date time = new Date();
+			
+			orderLogDao.addOrder(new OrderDTO(orderCd, orderStatusCd, format.format(time)));
+		}
 	}
 }

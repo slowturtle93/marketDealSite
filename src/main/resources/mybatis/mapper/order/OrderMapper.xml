@@ -36,6 +36,23 @@
 	    </association>
     </resultMap>
     
+    <resultMap id="orderDTO" type="com.market.server.dto.order.OrderDTO">
+        <result property="orderSeq "     column="item_cd"/> 
+        <result property="orderCd"       column="login_no"/>
+        <result property="loginNo"       column="item_nm"/>
+        <result property="itemCd"        column="item_price"/>
+        <result property="optionCd"      column="view_cnt"/>
+        <result property="orderStatusCd" column="like_cnt"/>
+        <result property="orderCnt"      column="category_cd"/>
+        <result property="orderPrice"    column="disp_yn"/>
+        <result property="deliveryPrice" column="del_yn"/>
+        <result property="discountPrice" column="image1"/>
+        <result property="totalPrice"    column="image2"/>
+        <result property="orderDttm"     column="image3"/>
+        <result property="regDttm"       column="image4"/>
+        <result property="updDttm"       column="description"/>
+    </resultMap>
+    
     <select id="getOrderList" resultMap="orderDetailDTO" parameterType="int">
         SELECT TOI.ORDER_CD        /* 주문코드 */
              , TOI.ORDER_CNT       /* 주문수량 */
@@ -64,8 +81,7 @@
          INNER JOIN TBL_ORDER_STATUS TOS ON (TOI.ORDER_STATUS_CD = TOS.ORDER_STATUS_CD) /* 주문상태정보 */
          WHERE TOI.LOGIN_NO = #{loginNo}
     </select>
-
-	
+    
 	<insert id="doOrder" parameterType="com.market.server.dto.order.OrderDTO">
 	    <selectKey keyProperty="orderSeq" resultType="int" order="BEFORE">
     	SELECT IFNULL(MAX(ORDER_SEQ), 0) + 1 FROM TBL_ORDER_INFO
@@ -103,5 +119,48 @@
 			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
 	    )
 	</insert>
+	
+	<insert id="insertOrderLog" parameterType="java.util.List">
+	    INSERT INTO TBL_ORDER_INFO_LOG (
+	           ORDER_SEQ       /* 주문시퀀스 */
+	         , ORDER_CD        /* 주문코드 */
+	         , LOGIN_NO        /* 로그인번호 */
+	         , ITEM_CD         /* 상품코드 */
+	         , OPTION_CD       /* 옵션코드 */
+	         , ORDER_STATUS_CD /* 주문상태코드 */
+	         , ORDER_CNT       /* 주문수량 */
+	         , ORDER_PRICE     /* 주문금액 */
+	         , DELIVERY_PRICE  /* 배송금액 */
+	         , DISCOUNT_PRICE  /* 할인금액 */
+	         , TOTAL_PRICE     /* 총결제금액 */
+	         , ORDER_DTTM      /* 주문일시 */
+	         , REG_DTTM        /* 등록일시 */
+	    ) 
+        <foreach item ="order" collection="orderList" separator="UNION ALL">
+        SELECT ORDER_SEQ              AS orderSeq 
+             , ORDER_CD               AS orderCd
+             , LOGIN_NO               AS loginNo
+             , ITEM_CD                AS itemCd
+             , OPTION_CD              AS optionCd
+             , #{order.orderStatusCd} AS orderStatusCd
+             , ORDER_CNT              AS orderCnt
+             , ORDER_PRICE            AS orderPrice
+             , DELIVERY_PRICE         AS deliveryPrice
+             , DISCOUNT_PRICE         AS discountPrice
+             , TOTAL_PRICE            AS totalPrice
+             , ORDER_DTTM             AS orderDttm
+             , #{order.regDttm}       AS regDttm
+          FROM TBL_ORDER_INFO
+         WHERE 1=1
+           AND ORDER_CD = #{order.orderCd}
+        </foreach>
+	</insert>
+	
+	<update id="updateOrderStatus">
+	    UPDATE TBL_ORDER_INFO
+	       SET ORDER_STATUS_CD = #{orderStatusCd}
+	         , UPD_DTTM        = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+	     WHERE ORDER_CD        = #{orderCd}
+	</update>
 	
 </mapper>
