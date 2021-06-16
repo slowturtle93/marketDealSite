@@ -43,4 +43,4 @@ Git Flow를 사용하여 branch를 관리<br>
 
 # 프로젝트 DB ERD
 
-![marketSite_ERD](https://user-images.githubusercontent.com/80434153/121981801-4da96600-cdc9-11eb-89cc-80edd670cca9.png)
+![marketSite_ERD](https://user-images.githubusercontent.com/80434153/122196386-28ece580-ced2-11eb-80bc-b3fb9eaf794c.png)
