@@ -87,7 +87,6 @@ public class RedisConfig {
      *
      * @param redisConnectionFactory Redis와의 연결을 담당한다.
      * @return
-     * @author junshock5
      */
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory,

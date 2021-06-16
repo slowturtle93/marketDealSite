@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.order.OrderStatusMapper">
+
+	<resultMap id="orderStatusDTO" type="com.market.server.dto.order.OrderStatusDTO">
+		<result property="orderStatusSeq" column="order_status_seq"/> 
+        <result property="orderStatusCd"  column="order_status_cd"/>
+        <result property="orderStatusNm"  column="order_status_nm"/>
+        <result property="regDttm"        column="reg_dttm"/>
+        <result property="updDttm"        column="upd_dttm"/>
+	</resultMap>
+	
+	<select id="getOrderStatus" resultType="orderStatusDTO">
+	    SELECT ORDER_STATUS_CD  /* 주문상태코드 */
+	         , ORDER_STATUS_NM  /* 주문상태명 */
+	         , REG_DTTM         /* 등록일시 */
+	         , UPD_DTTM         /* 수정일시 */
+	      FROM TBL_ORDER_STATUS /* 주문상태정보 */
+	     ORDER BY ORDER_STATUS_SEQ
+	</select>
+	
+	<select id="isDuplicatedNm" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		  FROM TBL_ORDER_STATUS
+		 WHERE ORDER_STATUS_NM = #{orderStatusNm}
+	</select>
+	
+	<insert id="InsertOrderStatus" parameterType="java.util.List">
+	    <selectKey keyProperty="orderStatusSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(ORDER_STATUS_SEQ), 0) + 1 FROM TBL_ORDER_STATUS
+    	</selectKey>
+	    
+		INSERT INTO TBL_ORDER_STATUS(
+		      ORDER_STATUS_SEQ /* 주문상태시퀀스 */
+		    , ORDER_STATUS_CD  /* 주문상태코드 */
+		    , ORDER_STATUS_NM  /* 주문상태명 */
+		    , REG_DTTM         /* 등록일시 */
+		    , UPD_DTTM         /* 수정일시 */
+		)
+		VALUES
+		<foreach item ="orderStatus" collection="orderStatusList" index="index" open="" separator="," close="">
+		(
+		      (#{orderStatusSeq} + #{index})
+			, (SELECT CONCAT('OSC', LPAD((#{orderStatusSeq} + #{index}), 3, '0')) FROM DUAL)
+			, #{orderStatus.orderStatusNm}
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		)
+		</foreach>
+	</insert>
+	
+	<update id="UpdateOrderStatus" parameterType="java.util.List">
+		<foreach item ="orderStatus" collection="orderStatusList" index="index" open="" separator=";" close="">
+		UPDATE TBL_ORDER_STATUS                                          /* 주문상태정보 */
+		   SET ORDER_STATUS_NM = #{orderStatus.orderStatusNm}            /* 주문상태명 */
+		     , UPD_DTTM        = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */ 
+		 WHERE OP_CATEGORY_CD  = #{orderStatus.orderStatusCd}
+		 </foreach>
+	</update>
+</mapper>
