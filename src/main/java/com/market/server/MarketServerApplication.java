@@ -3,6 +3,7 @@ package com.market.server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @SpringBootApplication
 @EnableCaching
 @EnableRedisHttpSession
+@EnableScheduling // 스케줄링을 허용한다.
 public class MarketServerApplication {
 
 	public static void main(String[] args) {
