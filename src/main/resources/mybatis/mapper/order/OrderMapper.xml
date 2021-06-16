@@ -36,23 +36,6 @@
 	    </association>
     </resultMap>
     
-    <resultMap id="orderDTO" type="com.market.server.dto.order.OrderDTO">
-        <result property="orderSeq "     column="item_cd"/> 
-        <result property="orderCd"       column="login_no"/>
-        <result property="loginNo"       column="item_nm"/>
-        <result property="itemCd"        column="item_price"/>
-        <result property="optionCd"      column="view_cnt"/>
-        <result property="orderStatusCd" column="like_cnt"/>
-        <result property="orderCnt"      column="category_cd"/>
-        <result property="orderPrice"    column="disp_yn"/>
-        <result property="deliveryPrice" column="del_yn"/>
-        <result property="discountPrice" column="image1"/>
-        <result property="totalPrice"    column="image2"/>
-        <result property="orderDttm"     column="image3"/>
-        <result property="regDttm"       column="image4"/>
-        <result property="updDttm"       column="description"/>
-    </resultMap>
-    
     <select id="getOrderList" resultMap="orderDetailDTO" parameterType="int">
         SELECT TOI.ORDER_CD        /* 주문코드 */
              , TOI.ORDER_CNT       /* 주문수량 */
