@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.cart.CartMapper">
+
+	<resultMap id="cartDetailDTO" type="com.market.server.dto.cart.CartDetailDTO">
+   		<result property="likeSeq" column="like_seq"/>
+        <result property="likeCd"  column="like_cd"/>
+	    <association property="productDTO">
+    		<result property="itemCd"     column="item_cd"/>
+	        <result property="itemNm"     column="item_nm"/>
+	        <result property="itemPrice"  column="item_price"/>
+	        <result property="categoryCd" column="category_cd"/>
+	        <result property="image1"     column="image1"/>
+	        <result property="title"      column="title"/>
+	        <result property="divisionCd" column="divisionCd"/>
+	    </association>
+    </resultMap>
+    
+    <select id="getCartList" resultMap="cartDetailDTO">
+        SELECT TRI.LIKE_SEQ   /* 예약시퀀스 */
+             , TRI.LIKE_CD    /* 예약코드 */
+             , TP.ITEM_CD     /* 상품코드 */
+             , TP.ITEM_NM     /* 상품명 */
+             , TP.ITEM_PRICE  /* 상품각겨 */
+             , TP.CATEGORY_CD /* 상품카테고리코드 */
+             , TP.IMAGE1      /* 이미지1 */
+             , TP.TITLE       /* 제목 */
+             , TP.DIVISION_CD /* 상품구분코드 */
+          FROM TBL_RESERVATION_INFO TRI
+         INNER JOIN TBL_PRODUCT TP ON(TRI.ITEM_CD = TP.ITEM_CD)
+         WHERE TRI.LOGIN_NO = #{loginNo}
+           AND TRI.DEL_YN   = 'N'
+         LIMIT #{strtRow}, #{endRow} 
+    </select>
+    
+    <insert id="insertCart" parameterType="com.market.server.dto.cart.CartDTO">
+        <selectKey keyProperty="likeSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(LIKE_SEQ), 0) + 1 FROM TBL_RESERVATION_INFO
+    	</selectKey>
+    	
+        INSERT INTO TBL_RESERVATION_INFO(
+              LIKE_SEQ  /* 예약시퀀스 */
+            , LIKE_CD   /* 예약코드 */
+            , LOGIN_NO  /* 로그인번호 */
+            , ITEM_CD   /* 상품코드 */
+            , OPTION_CD /* 옵션코드 */
+            , DEL_YN    /* 삭제여부 */
+            , REG_DTTM  /* 등록일시 */
+            , UPD_DTTM  /* 수정일시 */
+        ) VALUES (
+              #{likeSeq}
+            , (SELECT CONCAT('CA', LPAD(#{likeSeq}, 7, '0')) FROM DUAL)
+            , #{loginNo}
+            , #{itemCd}
+            , #{optionCd}
+            , 'N'
+            , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+            , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        )
+    </insert>
+    
+    <update id="deleteCart" parameterType="String">
+        UPDATE TBL_RESERVATION_INFO                               /* 상품예약정보 */
+           SET DEL_YN   = 'Y'                                     /* 삭제여부 */
+             , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
+         WHERE LOGIN_NO = #{loginNo}
+           AND LIKE_CD  = #{likeCd}
+    </update>
+</mapper>
