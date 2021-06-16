@@ -14,4 +14,8 @@ public interface OrderMapper {
 	public int doOrder(OrderDTO orderDTO);
 	
 	public List<OrderDetailDTO> getOrderList(@Param("loginNo") int loginNo);
+	
+	public int updateOrderStatus(@Param("orderCd") String orderCd, @Param("orderStatusCd") String orderStatusCd);
+	
+	public int insertOrderLog(@Param("orderList") List<OrderDTO> orderList);
 }

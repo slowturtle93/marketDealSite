@@ -11,4 +11,6 @@ public interface OrderService {
 	
 	public List<OrderDetailDTO> getOrderList(int loginNo);
 	
+	public void updateOrderStatus(String orderCd, String orderStatusCd);
+	
 }
