@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.order.OrderMapper">
+
+    <resultMap id="orderDetailDTO" type="com.market.server.dto.order.OrderDetailDTO">
+    	<association property="orderInfo">
+    		<result property="orderCd"       column="order_cd"/>
+	        <result property="orderCnt"      column="order_cnt"/>
+	        <result property="orderPrice"    column="order_price"/>
+	        <result property="deliveryPrice" column="delivery_price"/>
+	        <result property="discountPrice" column="discount_price"/>
+	        <result property="totalPrice"    column="total_price"/>
+	        <result property="orderDttm"     column="order_dttm"/>
+	    </association>
+	    <association property="userInfo">
+    		<result property="userNm"       column="user_nm"/>
+	        <result property="hpNum"        column="hp_num"/>
+	        <result property="roadFullAddr" column="road_full_addr"/>
+	        <result property="jibunAddr"    column="jibun_addr"/>
+	        <result property="zipNo"        column="zip_no"/>
+	        <result property="addrDetail"   column="addr_detail"/>
+	    </association>
+	    <association property="productInfo">
+    		<result property="itemCd" column="item_cd"/>
+	        <result property="image1" column="image1"/>
+	        <result property="title"  column="title"/>
+	    </association>
+	     <association property="optionInfo">
+    		<result property="optionCd" column="option_cd"/>
+	        <result property="optionNm" column="option_nm"/>
+	    </association>
+	     <association property="orderStatusInfo">
+    		<result property="orderStatusCd" column="order_status_cd"/>
+	        <result property="orderStatusCd" column="order_status_nm"/>
+	    </association>
+    </resultMap>
+    
+    <select id="getOrderList" resultMap="orderDetailDTO" parameterType="int">
+        SELECT TOI.ORDER_CD        /* 주문코드 */
+             , TOI.ORDER_CNT       /* 주문수량 */
+             , TOI.ORDER_PRICE     /* 주문금액 */
+             , TOI.DELIVERY_PRICE  /* 배송금액 */
+             , TOI.DISCOUNT_PRICE  /* 할인금액 */
+             , TOI.TOTAL_PRICE     /* 총결제금액 */
+             , TOI.ORDER_DTTM      /* 주문일시 */
+             , TUI.USER_NM         /* 사용자명 */
+             , TUI.HP_NUM          /* 휴대폰번호 */
+             , TUI.ROAD_FULL_ADDR  /* 도로명주소 */
+             , TUI.JIBUN_ADDR      /* 지번주소 */
+             , TUI.ZIP_NO          /* 우편번호 */
+             , TUI.ADDR_DETAIL     /* 상세주소 */
+             , TP.ITEM_CD          /* 상품코드 */
+             , TP.IMAGE1           /* 이미지1 */
+             , TP.TITLE            /* 제목 */
+             , TOP.OPTION_CD       /* 옵션코드 */
+             , TOP.OPTION_NM       /* 옵션명 */
+             , TOS.ORDER_STATUS_CD /* 주문상태코드 */
+             , TOS.ORDER_STATUS_NM /* 주뭉상태명 */
+          FROM TBL_ORDER_INFO        TOI                                                /* 주문정보 */
+         INNER JOIN TBL_USER_INFO    TUI ON (TOI.LOGIN_NO        = TUI.LOGIN_NO)        /* 사용자정보 */
+         INNER JOIN TBL_PRODUCT      TP  ON (TOI.ITEM_CD         = TP.ITEM_CD)          /* 상품정보 */
+         INNER JOIN TBL_OPTION       TOP ON (TOI.OPTION_CD       = TOP.OPTION_CD)       /* 옵션정보 */
+         INNER JOIN TBL_ORDER_STATUS TOS ON (TOI.ORDER_STATUS_CD = TOS.ORDER_STATUS_CD) /* 주문상태정보 */
+         WHERE TOI.LOGIN_NO = #{loginNo}
+    </select>
+
+	
+	<insert id="doOrder" parameterType="com.market.server.dto.order.OrderDTO">
+	    <selectKey keyProperty="orderSeq" resultType="int" order="BEFORE">
+    	SELECT IFNULL(MAX(ORDER_SEQ), 0) + 1 FROM TBL_ORDER_INFO
+    	</selectKey>
+    	
+	    INSERT INTO TBL_ORDER_INFO( /* 주문정보 */
+	          ORDER_SEQ       /* 주문시퀀스 */
+	        , ORDER_CD        /* 주문코드 */
+	        , LOGIN_NO        /* 로그인번호 */
+	        , ITEM_CD         /* 상품코드 */
+	        , OPTION_CD       /* 옵션코드 */
+	        , ORDER_STATUS_CD /* 주문상태코드 */
+	        , ORDER_CNT       /* 주문수량 */
+	        , ORDER_PRICE     /* 주문금액 */
+	        , DELIVERY_PRICE  /* 배송금액 */
+	        , DISCOUNT_PRICE  /* 할인금액 */
+	        , TOTAL_PRICE     /* 총결제금액 */
+	        , ORDER_DTTM      /* 주문일시 */
+	        , REG_DTTM        /* 등록일시 */
+	        , UPD_DTTM        /* 수정일시 */
+	    ) VALUES (
+	          (#{orderSeq})
+			, (SELECT CONCAT(#{orderCd}, LPAD(#{orderSeq}, 7, '0')) FROM DUAL)
+			, #{loginNo}
+			, #{itemCd}
+			, #{optionCd}
+			, 'OSC001'     /* 접수코드인 OSC001 디폴트 값 */
+			, #{orderCnt}
+			, #{orderPrice}
+			, #{deliveryPrice}
+			, #{discountPrice}
+			, #{totalPrice}
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 	, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+			, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+	    )
+	</insert>
+	
+</mapper>
