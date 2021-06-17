@@ -24,6 +24,7 @@ public class ProductDTO {
 	private Long itemPrice;     // 상품가격
 	private Integer viewCnt;    // 조회수
 	private Integer likeCnt;    // 좋아요수
+	private Integer orderCnt;   // 주문수
 	private String categoryCd;  // 상품카테고리코드
 	private String dispYn;      // 노출여부
 	private String delYn;       // 삭제여부
