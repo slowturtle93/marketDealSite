@@ -70,6 +70,12 @@
     	   AND status   = 'DEFAULT'
 	</select>
 	
+	<select id="findById" resultType="int">
+	    SELECT LOGIN_ID AS loginId
+	      FROM TBL_USER_INFO
+	     WHERE LOGIN_NO = #{loginNo}
+	</select>
+	
 	<select id="isDuplicatedId" resultType="int">
 		SELECT COUNT(*)
 		  FROM TBL_USER_INFO /* 사용자정보 */
