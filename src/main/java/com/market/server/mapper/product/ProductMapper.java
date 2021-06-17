@@ -1,6 +1,7 @@
 package com.market.server.mapper.product;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,5 +23,11 @@ public interface ProductMapper {
 	public int DeleteProduct(Search search);
 	
 	public String findByItemCd(@Param("itemSeq") int itemSeq);
+	
+	public int updateLikeCnt(@Param("likeMap") Map<Object, Object> likeMap);
+	
+	public int updateViewCnt(@Param("viewMap") Map<Object, Object> viewMap);
+	
+	public int updateOrderCnt(@Param("orderMap") Map<Object, Object> orderMap);
 	
 }
