@@ -74,11 +74,9 @@ public class OrderController {
 	 * @param orderCd
 	 * @param orderStatusCd
 	 */
-	@PatchMapping("status/{orderCd}/{orderStatusCd}")
+	@PatchMapping("status")
 	@LoginCheck(type = UserType.ADMIN)
-	public void updateOrderStatus(@PathVariable("orderCd") String orderCd, 
-			                      @PathVariable("orderStatusCd") String orderStatusCd) {
-		
-		orderService.updateOrderStatus(orderCd, orderStatusCd);
+	public void updateOrderStatus(OrderDTO orderDTO) {
+		orderService.updateOrderStatus(orderDTO);
 	}
 }
