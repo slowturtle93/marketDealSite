@@ -17,4 +17,7 @@ public interface ProductService {
 	public void updateProduct(ProductDetailDTO productDetailDTO);
 	
 	public void deleteProduct(Search search);
+	
+	public void productLikeCnt(String itemCd);
+	
 }
