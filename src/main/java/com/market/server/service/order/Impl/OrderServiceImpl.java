@@ -14,10 +14,13 @@ import com.market.server.dto.Search;
 import com.market.server.dto.order.OrderDTO;
 import com.market.server.dto.order.OrderDetailDTO;
 import com.market.server.dto.product.ProductDetailDTO;
+import com.market.server.dto.push.PushMessage;
 import com.market.server.error.exception.TotalPriceMismatchException;
 import com.market.server.mapper.order.OrderMapper;
 import com.market.server.service.order.OrderService;
 import com.market.server.service.product.Impl.ProductServiceImpl;
+import com.market.server.service.push.PushServiceImpl;
+import com.market.server.service.user.Impl.UserServiceImpl;
 import com.market.server.utils.RedisKeyFactory;
 
 import lombok.extern.log4j.Log4j2;
@@ -37,7 +40,13 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private ProductDao productDao; 
-
+	
+	@Autowired
+	private PushServiceImpl pushService;
+	
+	@Autowired
+	private UserServiceImpl userService;
+	
 	/**
 	 * 상품을 주문한다.
 	 */
@@ -115,6 +124,40 @@ public class OrderServiceImpl implements OrderService{
 			int orderCnt = productDao.getProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd());
 			productDao.addProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd(), orderCnt - orderDTO.getOrderCnt());
 		}
+		
+		//사용자 아이디 get
+		String userId = userService.findById(orderDTO.getLoginNo());
+		
+		//푸시메시지 전송
+		sendPushMessage(userId, orderStatusCd);
+	}
+
+	@Override
+	public void sendPushMessage(String userId, String orderStatusCd) {
+		PushMessage messageInfo = new PushMessage();
+		
+		switch (orderStatusCd) {
+		case "OSC001": // 상품접수
+			messageInfo = PushMessage.ORDER_STATUS_ACCEPT;
+			break;
+		case "OSC003": // 잡화처리
+			messageInfo = PushMessage.ORDER_STATUS_CORRECT;
+			break;
+		case "OSC005": // 배송출발
+			messageInfo = PushMessage.ORDER_STATUS_START;
+			break;
+		case "OSC007": // 배송완료
+			messageInfo = PushMessage.ORDER_STATUS_COMPLETE;
+			break;
+		case "OSC008": //환불
+			messageInfo = PushMessage.ORDER_STATUS_REFUND;
+			break;
+		case "OSC009": //환불완료
+			messageInfo = PushMessage.ORDER_STATUS_REFUND_COMPLETE;
+			break;
+		}
+		
+		pushService.sendMessageToUser(messageInfo, userId);
 		
 	}
 }

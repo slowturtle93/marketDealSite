@@ -13,4 +13,6 @@ public interface OrderService {
 	
 	public void updateOrderStatus(OrderDTO orderDTO);
 	
+	public void sendPushMessage(String userId, String orderStatusCd);
+	
 }
