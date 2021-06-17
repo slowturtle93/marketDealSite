@@ -10,6 +10,7 @@
         <result property="itemPrice"     column="item_price"/>
         <result property="viewCnt"       column="view_cnt"/>
         <result property="likeCnt"       column="like_cnt"/>
+        <result property="orderCnt"      column="order_cnt"/>
         <result property="categoryCd"    column="category_cd"/>
         <result property="dispYn"        column="disp_yn"/>
         <result property="delYn"         column="del_yn"/>
@@ -32,6 +33,7 @@
              , ITEM_PRICE     /* 상품가격 */
              , VIEW_CNT       /* 조회수 */
              , LIKE_CNT       /* 좋아요수 */
+             , ORDER_CNT      /* 주문수량 */
              , CATEGORY_CD    /* 상품카테고리코드 */
              , DISP_YN        /* 전시여부 */
              , DEL_YN         /* 삭제여부 */
@@ -62,6 +64,7 @@
              , ITEM_PRICE     /* 상품가격 */
              , VIEW_CNT       /* 조회수 */
              , LIKE_CNT       /* 좋아요수 */
+             , ORDER_CNT      /* 주문수량 */
              , CATEGORY_CD    /* 상품카테고리코드 */
              , DISP_YN        /* 전시여부 */
              , DEL_YN         /* 삭제여부 */
@@ -146,6 +149,7 @@
 			, ITEM_PRICE     /* 상품가격 */
 			, VIEW_CNT       /* 조회수 */
 			, LIKE_CNT       /* 좋아요수 */
+			, ORDER_CNT      /* 주문수량 */
 			, CATEGORY_CD    /* 상품카테고리코드 */
 			, DISP_YN        /* 전시여부 */
 			, DEL_YN         /* 삭제여부 */
@@ -166,6 +170,7 @@
 			, #{loginNo}
 			, #{itemNm}
 			, #{itemPrice}
+			, 0
 			, 0
 			, 0
 			, #{categoryCd}
@@ -210,6 +215,57 @@
 	         , UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') /* 수정일시 */
 	     WHERE ITEM_CD  = #{itemCd}
 	       AND LOGIN_NO = #{loginNo}
+	</update>
+	
+	<update id="updateLikeCnt" parameterType="Map">
+		<foreach item="value" index="key" collection="likeMap" separator=";">
+		UPDATE TBL_PRODUCT T1
+		     , (
+		       	    SELECT ITEM_CD
+		       	         , LIKE_CNT
+		       	      FROM TBL_PRODUCT
+		       	     WHERE ITEM_CD    = #{key}
+		       	       AND T1.DEL_YN  = 'N'
+		       ) T2
+		   SET T1.LIKE_CNT = T2.LIKE_CNT + #{value}
+		     , T1.UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 WHERE T1.ITEM_CD  = #{key}
+		   AND T1.DEL_YN   = 'N'
+	    </foreach>
+	</update>
+	
+	<update id="updateViewCnt" parameterType="Map">
+		<foreach item="value" index="key" collection="likeMap" separator=";">
+		UPDATE TBL_PRODUCT T1
+		     , (
+		       	    SELECT ITEM_CD
+		       	         , VIEW_CNT
+		       	      FROM TBL_PRODUCT
+		       	     WHERE ITEM_CD    = #{key}
+		       	       AND T1.DEL_YN  = 'N'
+		       ) T2
+		   SET T1.LIKE_CNT = T2.VIEW_CNT + #{value}
+		     , T1.UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 WHERE T1.ITEM_CD  = #{key}
+		   AND T1.DEL_YN   = 'N'
+	    </foreach>
+	</update>
+	
+	<update id="updateOrderCnt" parameterType="Map">
+		<foreach item="value" index="key" collection="likeMap" separator=";">
+		UPDATE TBL_PRODUCT T1
+		     , (
+		       	    SELECT ITEM_CD
+		       	         , ORDER_CNT
+		       	      FROM TBL_PRODUCT
+		       	     WHERE ITEM_CD    = #{key}
+		       	       AND T1.DEL_YN  = 'N'
+		       ) T2
+		   SET T1.LIKE_CNT = T2.ORDER_CNT + #{value}
+		     , T1.UPD_DTTM = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+		 WHERE T1.ITEM_CD  = #{key}
+		   AND T1.DEL_YN   = 'N'
+	    </foreach>
 	</update>
 	
 </mapper>

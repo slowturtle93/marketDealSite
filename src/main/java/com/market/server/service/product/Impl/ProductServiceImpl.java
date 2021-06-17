@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.market.server.dao.ProductDao;
 import com.market.server.dto.Search;
 import com.market.server.dto.product.ProductDTO;
 import com.market.server.dto.product.ProductDetailDTO;
@@ -13,6 +14,7 @@ import com.market.server.dto.product.ProductDivisionDTO;
 import com.market.server.mapper.product.ProductMapper;
 import com.market.server.service.option.Impl.OptionServiceImpl;
 import com.market.server.service.product.ProductService;
+import com.market.server.utils.RedisKeyFactory;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +34,9 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired 
 	private ProductDivisionServiceImpl productDivisionService;
 	
+	@Autowired
+	private ProductDao productDao;
+	
 	
 	
 	/**
@@ -49,9 +54,14 @@ public class ProductServiceImpl implements ProductService{
 	public ProductDetailDTO productDetail(Search search) {
 		ProductDetailDTO productDetailDTO = new ProductDetailDTO();
 		
-		productDetailDTO.setProductDTO(productMapper.productDetail(search));         // 상품 정보 set
+		productDetailDTO.setProductDTO(productMapper.productDetail(search));           // 상품 정보 set
 		productDetailDTO.setOptionList(optionService.getOption(search));               // 상품 옵션정보 set
 		productDetailDTO.setTradingAreaDTO(tradingAreaService.getTradingArea(search)); // 상품 거래정보 set
+		
+		//조회수 증가
+		String itemCd = search.getString("itemCd");
+		int viewCnt = productDao.getProductCntInfo(RedisKeyFactory.VIEW_CNT_KEY, itemCd);
+		productDao.addProductCntInfo(RedisKeyFactory.VIEW_CNT_KEY, itemCd, viewCnt + 1);
 		
 		return productDetailDTO;
 	}
@@ -182,6 +192,15 @@ public class ProductServiceImpl implements ProductService{
 			log.error("Delete Product Error! {}", search.get("itemCd"));
 		    throw new RuntimeException("Delete Product Error");
 		}
+	}
+
+	/**
+	 * 특정 상품 좋아요 클릭 시 count 증가한다.
+	 */
+	@Override
+	public void productLikeCnt(String itemCd) {
+		int likeCnt = productDao.getProductCntInfo(RedisKeyFactory.LIKE_CNT_KEY, itemCd);
+		productDao.addProductCntInfo(RedisKeyFactory.LIKE_CNT_KEY, itemCd, likeCnt + 1);
 	}
 
 }
