@@ -79,6 +79,16 @@ public class ProductSearchController {
 		return new ResponseEntity<ProductDetailDTO>(productDetailDTO, HttpStatus.OK);
 	}
 	
+	/**
+	 * 특정 상품 좋아요 클릭 시 count 증가한다.
+	 * 
+	 * @param itemCd
+	 */
+	@GetMapping("{itemCd}/like")
+	public void productLikeCnt(@PathVariable("itemCd") String itemCd) {
+		productService.productLikeCnt(itemCd);
+	}
+	
 	// -------------- response 객체 --------------
 	
 	@Getter

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.market.server.dao.OrderLogDao;
+import com.market.server.dao.ProductDao;
 import com.market.server.dto.Search;
 import com.market.server.dto.order.OrderDTO;
 import com.market.server.dto.order.OrderDetailDTO;
@@ -17,6 +18,7 @@ import com.market.server.error.exception.TotalPriceMismatchException;
 import com.market.server.mapper.order.OrderMapper;
 import com.market.server.service.order.OrderService;
 import com.market.server.service.product.Impl.ProductServiceImpl;
+import com.market.server.utils.RedisKeyFactory;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +34,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private OrderLogDao orderLogDao;
+	
+	@Autowired
+	private ProductDao productDao; 
 
 	/**
 	 * 상품을 주문한다.
@@ -81,9 +86,12 @@ public class OrderServiceImpl implements OrderService{
 	 */
 	@Override
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void updateOrderStatus(String orderCd, String orderStatusCd) {
+	public void updateOrderStatus(OrderDTO orderDTO) {
 		
-		int result = orderMapper.updateOrderStatus(orderCd, orderStatusCd);
+		String orderCd = orderDTO.getOrderCd();
+		String orderStatusCd = orderDTO.getOrderStatusCd();
+		
+		int result = orderMapper.updateOrderStatus( orderCd, orderStatusCd);
 		
 		if(result != 1) {
 			log.error("Update ERROR! {}", orderCd);
@@ -95,5 +103,18 @@ public class OrderServiceImpl implements OrderService{
 			
 			orderLogDao.addOrder(new OrderDTO(orderCd, orderStatusCd, format.format(time)));
 		}
+		
+		// 배송완료 시 주문수량 count 저장, OSC007 - 배송완료
+		if("OSC007".equals(orderStatusCd)) {
+			int orderCnt = productDao.getProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd());
+			productDao.addProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd(), orderCnt + orderDTO.getOrderCnt());
+		}
+		
+		// 환불완료 시 주문수량 count 변경, OSC009 - 환불완료
+		if("OSC009".equals(orderStatusCd)) {
+			int orderCnt = productDao.getProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd());
+			productDao.addProductCntInfo(RedisKeyFactory.ORDER_CNT_KEY, orderDTO.getItemCd(), orderCnt - orderDTO.getOrderCnt());
+		}
+		
 	}
 }
