@@ -20,4 +20,6 @@ public interface UserMapper {
 	public int update(UserDTO userDTO);
 	
 	public int delete(@Param("loginNo") int loginNo);
+	
+	public String findById(@Param("loginNo") int loginNo);
 }
