@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 @Getter
 public class PushMessage {
-	D
     @NonNull
     private String title;
     @NonNull
