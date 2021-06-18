@@ -19,4 +19,6 @@ public interface UserService {
 	public void update(UserDTO userDTO);
 	
 	public int delete(int loginNo);
+	
+	public String findById(int loginNo);
 }

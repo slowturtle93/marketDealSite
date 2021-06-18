@@ -8,7 +8,7 @@ public class RedisKeyFactory {
 	public static final String ORDER_CNT_KEY = "ORDERCNT";
   
     public enum Key {
-      VIEW_CNT, LIKE_CNT, ORDER_CNT
+      FCM_USER, FCM_USER_ERROR
     }
 
     // 인스턴스화 방지
@@ -18,16 +18,8 @@ public class RedisKeyFactory {
       return id + ":" + key;
     }
   
-    public static String generateViewCntKey(String ViewCnt) {
-      return generateKey(ViewCnt, Key.VIEW_CNT);
-    }
-    
-    public static String generateLikeCntKey(String LikeCnt) {
-      return generateKey(LikeCnt, Key.LIKE_CNT);
-    }
-    
-    public static String generateOrderCntKey(String OrderCnt) {
-      return generateKey(OrderCnt, Key.ORDER_CNT);
+    public static String generateFcmUserKey(String ViewCnt) {
+      return generateKey(ViewCnt, Key.FCM_USER);
     }
     
     /**
@@ -38,6 +30,10 @@ public class RedisKeyFactory {
      */
     public static String getIdFromKey(String key) {
       return key.substring(0, key.indexOf(":"));
+    }
+    
+    public static String generateFcmUserErrorKey(String memberId) {
+      return generateKey(memberId, Key.FCM_USER_ERROR);
     }
   
 }

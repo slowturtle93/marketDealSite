@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.market.server.aop.LoginCheck;
 import com.market.server.aop.LoginCheck.UserType;
 import com.market.server.dto.user.UserDTO;
+import com.market.server.service.push.PushServiceImpl;
 import com.market.server.service.user.Impl.UserServiceImpl;
 import com.market.server.utils.SessionUtil;
 
@@ -58,12 +59,11 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserController {
 	
-	private final UserServiceImpl userService;
-	
 	@Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+	private UserServiceImpl userService;
+	
+//	@Autowired
+	private PushServiceImpl pushService;
 	
 	/**
 	 * 회원이 myPage 클릭 시 사용자 정보 반환
@@ -274,6 +274,19 @@ public class UserController {
 		    responseEntity     = new ResponseEntity<UserResultResponse>(userResultResponse, HttpStatus.NOT_FOUND);
 		}
 	    return responseEntity;
+	}
+	
+	/**
+	 * 사용자 token 정보 저장
+	 * 
+	 * @param session
+	 * @param token
+	 */
+	@PostMapping("token")
+	@LoginCheck(type = UserType.USER)
+	public void addToken(HttpSession session, String token) {
+		String userId = SessionUtil.getLoginUserId(session);
+		pushService.addUserToken(userId, token);
 	}
 	
 	/*======================= response 객체 ======================= */

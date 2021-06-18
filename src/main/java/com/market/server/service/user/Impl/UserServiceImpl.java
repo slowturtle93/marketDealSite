@@ -136,4 +136,12 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
+	/**
+	 * 로그인 아이디 조회
+	 */
+	@Override
+	public String findById(int loginNo) {
+		return userMapper.findById(loginNo);
+	}
+
 }
