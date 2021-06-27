@@ -2,13 +2,13 @@ package com.market.server.utils;
 
 public class RedisKeyFactory {
 	
-	public static final String ORDER_KEY = "ORDERS";
-	public static final String VIEW_CNT_KEY = "VIEWCNT";
-	public static final String LIKE_CNT_KEY = "LIKECNT";
+	public static final String ORDER_KEY     = "ORDERS";
+	public static final String VIEW_CNT_KEY  = "VIEWCNT";
+	public static final String LIKE_CNT_KEY  = "LIKECNT";
 	public static final String ORDER_CNT_KEY = "ORDERCNT";
   
     public enum Key {
-      FCM_USER, FCM_USER_ERROR
+      FCM_USER, FCM_USER_ERROR, CHAT_USER
     }
 
     // 인스턴스화 방지
@@ -18,8 +18,12 @@ public class RedisKeyFactory {
       return id + ":" + key;
     }
   
-    public static String generateFcmUserKey(String ViewCnt) {
-      return generateKey(ViewCnt, Key.FCM_USER);
+    public static String generateFcmUserKey(String userId) {
+      return generateKey(userId, Key.FCM_USER);
+    }
+    
+    public static String generateChatUserKey(String userId) {
+      return generateKey(userId, Key.CHAT_USER);
     }
     
     /**
@@ -32,8 +36,8 @@ public class RedisKeyFactory {
       return key.substring(0, key.indexOf(":"));
     }
     
-    public static String generateFcmUserErrorKey(String memberId) {
-      return generateKey(memberId, Key.FCM_USER_ERROR);
+    public static String generateFcmUserErrorKey(String userId) {
+      return generateKey(userId, Key.FCM_USER_ERROR);
     }
   
 }
