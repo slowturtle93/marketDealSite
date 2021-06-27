@@ -36,6 +36,8 @@ public class OrderLogDao {
 	public void addOrder(OrderDTO orderDTO) {
 		final String key = RedisKeyFactory.ORDER_KEY;
 		
+		redisTemplate.watch(key);
+		
 		try {
 			redisTemplate.multi();
 			redisTemplate.opsForList().rightPush(key, orderDTO);

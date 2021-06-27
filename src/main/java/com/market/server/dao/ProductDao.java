@@ -1,8 +1,10 @@
 package com.market.server.dao;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +19,9 @@ public class ProductDao {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Value("${expire.goods.cnt}")
+	private Long goodsCntExpireSecond;
+	
 	/**
 	 * 상품의 count 정보를 저장한다.
 	 * 
@@ -24,7 +29,22 @@ public class ProductDao {
 	 * @param itemCd
 	 */
 	public void addProductCntInfo(String key, String itemCd, int Cnt) {
-		redisTemplate.opsForHash().put(key, itemCd, Cnt);
+		
+		redisTemplate.watch(key);
+		
+		try {
+			redisTemplate.multi();
+			redisTemplate.opsForHash().put(key, itemCd, Cnt);
+			redisTemplate.expire(key, goodsCntExpireSecond, TimeUnit.SECONDS);
+			
+			redisTemplate.exec();
+			
+		}catch (Exception e) {
+			redisTemplate.discard(); // 트랜잭션 종료시 unwatch()가 호출된다
+		    System.out.println(e.getMessage());
+		    throw e;
+		}
+		
 	}
 	
 	/**

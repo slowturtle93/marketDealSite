@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.server.mapper.chat.ChatMapper">
+
+	<resultMap id="chatRoomDTO" type="com.market.server.dto.chat.ChatRoomDTO">
+		<result property="roomId"  column="room_id"/>
+		<result property="roomNm"  column="room_nm"/>
+		<result property="buyer"   column="buyer"/>
+		<result property="seller"  column="seller"/>
+		<result property="delYn"   column="del_yn"/>
+		<result property="regDttm" column="reg_dttm"/>
+    </resultMap>
+    
+    <resultMap id="chatMessageDTO" type="com.market.server.dto.chat.ChatMessageDTO">
+		<result property="roomId"   column="room_id"/>
+		<result property="sender"   column="sender"/>
+		<result property="message"  column="message"/>
+		<result property="sentDttm" column="sent_dttm"/>
+    </resultMap>
+    
+    <select id="getChatRoomList" resultType="chatRoomDTO" parameterType="String">
+        SELECT ROOM_ID       /* 방번호 */
+             , ROOM_NM       /* 방이름 */
+             , BUYER_ID      /* 구매자 */
+             , SELLER_ID     /* 판매자 */
+             , DEL_YN        /* 삭제여부 */
+             , REG_DTTM      /* 등록일시 */
+          FROM TBL_CHAT_ROOM /* 채팅방정보 */ 
+         WHERE DEL_YN = 'N'
+           AND #{userId} IN (BUYER_ID, SELLER_ID)
+         ORDER BY REG_DTTM
+    </select>
+    
+    <select id="getChatRoomInfo" resultType="chatRoomDTO" parameterType="String">
+        SELECT ROOM_ID       /* 방번호 */
+             , ROOM_NM       /* 방이름 */
+             , BUYER_ID      /* 구매자 */
+             , SELLER_ID     /* 판매자 */
+             , DEL_YN        /* 삭제여부 */
+             , REG_DTTM      /* 등록일시 */
+          FROM TBL_CHAT_ROOM /* 채팅방정보 */ 
+         WHERE ROOM_ID = #{roomId}
+           AND DEL_YN  = 'N'
+    </select> 
+    
+    <select id="getChatMessage" resultType="chatMessageDTO">
+        SELECT ROOM_ID        /* 방번호 */
+             , SENDER         /* 보낸사람 */
+             , MESSAGE        /* 메세지 */
+             , SENT_DTTM      /* 보낸일시 */
+          FROM TBL_CHAT_MESSAGE /* 채팅방정보 */ 
+         WHERE ROOM_ID = #{roomId}
+         ORDER BY SENT_DTTM DESC
+         LIMIT #{strtRow}, #{endRow}
+    </select>
+    
+    <insert id="createRoom" parameterType="com.market.server.dto.chat.ChatRoomDTO">
+        INSERT INTO TBL_CHAT_ROOM (
+              ROOM_ID   /* 방번호 */
+            , ROOM_NM   /* 방이름 */
+            , BUYER_ID  /* 구매자 */
+            , SELLER_ID /* 판매자 */
+            , DEL_YN    /* 삭제여부 */
+            , REG_DTTM  /* 등록일시 */
+        ) VALUES (
+              #{roomId}
+            , #{roomNm}
+            , #{buyerId}
+            , #{sellerId}
+            , 'N'
+            , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        )
+    </insert>
+    
+    <insert id="addMessageList" parameterType="java.util.List">
+        INSERT INTO TBL_CHAT_MESSAGE (
+              ROOM_ID   /* 방번호 */
+            , SENDER    /* 보낸사람 */
+            , MESSAGE   /* 메세지 */
+            , SENT_DTTM /* 보낸일시 */
+        ) 
+        VALUES 
+        <foreach item ="msg" collection="messageList" index="index" open="" separator="," close="">
+        (
+              #{msg.roomId}
+            , #{msg.sender}
+            , #{msg.message}
+            , #{msg.sentDttm}
+        )
+        </foreach>
+    </insert>
+    
+</mapper>
