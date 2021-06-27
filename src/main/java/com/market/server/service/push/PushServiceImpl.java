@@ -21,7 +21,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.market.server.dao.FcmDao;
 import com.market.server.dto.push.PushMessage;
-import com.market.server.service.push.PushServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -65,7 +64,7 @@ public class PushServiceImpl{
 	}
 
 	/**
-	 * 고객 아이디로 로그인한 기기에 메세지를 보낸다. khs
+	 * 고객 아이디로 로그인한 기기에 메세지를 보낸다.
 	 * 
 	 * @param messageInfo 푸시 정보
 	 * @param userId 고객 아이디
@@ -96,12 +95,10 @@ public class PushServiceImpl{
 			addErrorUserPush(userId, message);
 		}
 	}
-		  
-	    
-	  
+	
 	/**
 	 * 회원 토큰정보를 저장한다.
-	 * 동일 토큰이 존재할시 추가하지 않는다. 잇음 khs
+	 * 동일 토큰이 존재할시 추가하지 않는다.
 	 * 
 	 * @param userId 고객 아이디
 	 * @param token 토큰 정보
