@@ -103,7 +103,12 @@ public class RedisConfig {
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory)
                 .cacheDefaults(configuration).build();
     }
-    
+    /**
+     * 어플리케이션에서 사용할 redisTemplate 설정
+     * 
+     * @param objectMapper
+     * @return
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(ObjectMapper objectMapper) {
       GenericJackson2JsonRedisSerializer serializer =
