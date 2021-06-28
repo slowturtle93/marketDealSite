@@ -42,8 +42,8 @@ public class SessionUtil {
 	 * @param session
 	 * @return
 	 */
-	public static String getLoginUserId(HttpSession session) {
-		return (String) session.getAttribute(LOGIN_USER_NO);
+	public static int getLoginUserNo(HttpSession session) {
+		return (int) session.getAttribute(LOGIN_USER_ID);
 	}
 	
 	/**
@@ -52,8 +52,8 @@ public class SessionUtil {
 	 * @param session
 	 * @return
 	 */
-	public static int getLoginUserNo(HttpSession session) {
-		return (int) session.getAttribute(LOGIN_USER_ID);
+	public static String getLoginUserId(HttpSession session) {
+		return (String) session.getAttribute(LOGIN_USER_NO);
 	}
 	
 	
@@ -87,8 +87,8 @@ public class SessionUtil {
 	 * @param session
 	 * @return
 	 */
-	public static String getLoginAdminId(HttpSession session) {
-		return (String) session.getAttribute(LOGIN_ADMIN_NO);
+	public static int getLoginAdminNo(HttpSession session) {
+		return (int) session.getAttribute(LOGIN_ADMIN_NO); 
 	}
 	
 	/**
@@ -97,8 +97,8 @@ public class SessionUtil {
 	 * @param session
 	 * @return
 	 */
-	public static int getLoginAdminNo(HttpSession session) {
-		return (int) session.getAttribute(LOGIN_ADMIN_ID);
+	public static String getLoginAdminId(HttpSession session) {
+		return (String) session.getAttribute(LOGIN_ADMIN_ID);
 	}
 	
 }
