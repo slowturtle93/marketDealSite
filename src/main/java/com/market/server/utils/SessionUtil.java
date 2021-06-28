@@ -43,7 +43,7 @@ public class SessionUtil {
 	 * @return
 	 */
 	public static int getLoginUserNo(HttpSession session) {
-		return (int) session.getAttribute(LOGIN_USER_ID);
+		return (int) session.getAttribute(LOGIN_USER_NO);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class SessionUtil {
 	 * @return
 	 */
 	public static String getLoginUserId(HttpSession session) {
-		return (String) session.getAttribute(LOGIN_USER_NO);
+		return (String) session.getAttribute(LOGIN_USER_ID);
 	}
 	
 	
