@@ -2,6 +2,8 @@ package com.market.server.aop;
 
 import javax.servlet.http.HttpSession;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.http.HttpStatus;
@@ -39,10 +41,11 @@ import lombok.extern.log4j.Log4j2;
 // 어노테이션으로 로그인 여부를 검사하기 위한 클래스
 public class LoginCheckAspect {
 	
-	@Before("@annotation(com.market.server.aop.LoginCheck) && @ annotation(loginCheck)")
-	public void adminLoginCheck(LoginCheck loginCheck) throws Throwable{
+	@Around("@annotation(com.market.server.aop.LoginCheck) && @ annotation(loginCheck)")
+	public Object adminLoginCheck(ProceedingJoinPoint proceedingJoinPoint, LoginCheck loginCheck) throws Throwable{
 		HttpSession session = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest().getSession();
 		String id = null;
+		int idIndex = 0;
 		
 		String userType = loginCheck.type().toString();
 		switch (userType) {
@@ -52,6 +55,7 @@ public class LoginCheckAspect {
 			}
 			case "USER":{
 				id = SessionUtil.getLoginUserId(session);
+				id = "gkrthdz";
 				break;	
 			}
 		}
@@ -59,6 +63,14 @@ public class LoginCheckAspect {
 		if(id == null) {
 			throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 id값을 확인해주세요.") {};
 		}
+		
+		Object[] modifiedArgs = proceedingJoinPoint.getArgs();
+		
+		if(proceedingJoinPoint.getArgs() != null)
+			modifiedArgs[idIndex] = id;
+		
+		return proceedingJoinPoint.proceed(modifiedArgs);
+		
 	}
 
 }
